@@ -19,7 +19,7 @@ else()
 endif()
 
 # Project name and version
-project(perfection_inlining VERSION 1.0)
+project(inlining VERSION 1.0)
 
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -84,7 +84,7 @@ set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable benchmark tests")
 add_subdirectory("${BENCHMARK_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/benchmark" EXCLUDE_FROM_ALL)
 
 # Add the executable
-add_executable(perfection_inlining main.cpp)
+add_executable(inlining main.cpp)
 
 # Link Google Benchmark
-target_link_libraries(perfection_inlining PRIVATE benchmark::benchmark)
+target_link_libraries(inlining PRIVATE benchmark::benchmark)

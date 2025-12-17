@@ -41,7 +41,7 @@ for compiler in "${COMPILERS[@]}"; do
         echo "============================================"
         
         echo "========== ${compiler} -${opt_level} ==========" >> "${LOG_FILE}"
-        "${BUILD_DIR}/perfection_inlining" >> "${LOG_FILE}" 2>&1
+        "${BUILD_DIR}/inlining" >> "${LOG_FILE}" 2>&1
         echo "" >> "${LOG_FILE}"
         
         echo ""
