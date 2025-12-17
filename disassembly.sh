@@ -63,15 +63,18 @@ for compiler in "${COMPILERS[@]}"; do
         echo "" >> "${DISASM_FILE}"
         
         echo "========== process_random_data_inlined ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*process_random_data_inlined.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" >> "${DISASM_FILE}"
+        awk '/^[0-9a-f]+ <.*process_random_data_inlined.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" | \
+            sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
         echo "" >> "${DISASM_FILE}"
         
         echo "========== process_random_data_noinline ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*process_random_data_noinline.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" >> "${DISASM_FILE}"
+        awk '/^[0-9a-f]+ <.*process_random_data_noinline.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" | \
+            sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
         echo "" >> "${DISASM_FILE}"
         
         echo "========== swap_chars_noinline ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*swap_chars_noinline.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" >> "${DISASM_FILE}"
+        awk '/^[0-9a-f]+ <.*swap_chars_noinline.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" | \
+            sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
         echo "" >> "${DISASM_FILE}"
         
         rm "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis"
