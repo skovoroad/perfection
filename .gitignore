@@ -1,5 +1,4 @@
-# Ignore benchmark folder in root
 /benchmark/
 
-# Ignore all .build folders throughout the project
 **/.build/
+**/.log/

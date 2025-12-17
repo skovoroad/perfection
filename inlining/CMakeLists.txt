@@ -1,12 +1,38 @@
 # Minimum CMake version required
 cmake_minimum_required(VERSION 3.10)
 
+# Option to select compiler (gcc or clang)
+set(COMPILER_CHOICE "gcc" CACHE STRING "Choose compiler: gcc or clang")
+set_property(CACHE COMPILER_CHOICE PROPERTY STRINGS gcc clang)
+
+# Set the compiler based on the choice
+if(COMPILER_CHOICE STREQUAL "gcc")
+    set(CMAKE_C_COMPILER gcc)
+    set(CMAKE_CXX_COMPILER g++)
+    message(STATUS "Using GCC compiler")
+elseif(COMPILER_CHOICE STREQUAL "clang")
+    set(CMAKE_C_COMPILER clang)
+    set(CMAKE_CXX_COMPILER clang++)
+    message(STATUS "Using Clang compiler")
+else()
+    message(FATAL_ERROR "Invalid compiler choice: ${COMPILER_CHOICE}. Use 'gcc' or 'clang'")
+endif()
+
 # Project name and version
-project(MyMinimalProject VERSION 1.0)
+project(perfection_inlining VERSION 1.0)
 
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Option to set optimization level
+set(OPTIMIZATION_LEVEL "O2" CACHE STRING "Optimization level: O0, O1, O2, O3, Os, Ofast")
+set_property(CACHE OPTIMIZATION_LEVEL PROPERTY STRINGS O0 O1 O2 O3 Os Ofast)
+
+# Apply optimization level
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -${OPTIMIZATION_LEVEL}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -${OPTIMIZATION_LEVEL}")
+message(STATUS "Using optimization level: -${OPTIMIZATION_LEVEL}")
 
 # Google Benchmark setup
 set(BENCHMARK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../benchmark")
@@ -58,7 +84,7 @@ set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable benchmark tests")
 add_subdirectory("${BENCHMARK_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/benchmark" EXCLUDE_FROM_ALL)
 
 # Add the executable
-add_executable(MyMinimalProject main.cpp)
+add_executable(perfection_inlining main.cpp)
 
 # Link Google Benchmark
-target_link_libraries(MyMinimalProject PRIVATE benchmark::benchmark)
+target_link_libraries(perfection_inlining PRIVATE benchmark::benchmark)

@@ -43,7 +43,6 @@ void process_random_data_noinline() {
     }
 }
 
-// Benchmark для версии с FORCE_INLINE
 static void BM_process_inlined(benchmark::State& state) {
     initialize_random_data();
     
@@ -53,7 +52,6 @@ static void BM_process_inlined(benchmark::State& state) {
     }
 }
 
-// Benchmark для версии с NOINLINE
 static void BM_process_noinline(benchmark::State& state) {
     initialize_random_data();
     
@@ -63,9 +61,7 @@ static void BM_process_noinline(benchmark::State& state) {
     }
 }
 
-// Register the benchmarks
 BENCHMARK(BM_process_inlined);
 BENCHMARK(BM_process_noinline);
 
-// Main function to run benchmarks
 BENCHMARK_MAIN();
