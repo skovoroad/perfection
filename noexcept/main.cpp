@@ -13,27 +13,44 @@ void initialize_random_data() {
     }
 }
 
-// Function with noexcept specifier
-void swap_chars_noexcept(char& a, char& b) noexcept {
-    std::swap(a, b);
-}
+// Pure virtual interface
+class Swapper {
+public:
+    virtual ~Swapper() = default;
+    virtual void swap(char& a, char& b) = 0;
+};
+
+// Implementation with noexcept
+class NoExceptSwapper : public Swapper {
+public:
+    virtual void swap(char& a, char& b) noexcept override {
+        std::swap(a, b);
+    }
+};
+
+// Implementation without noexcept
+class RegularSwapper : public Swapper {
+public:
+    virtual void swap(char& a, char& b) override {
+        std::swap(a, b);
+    }
+};
 
 void process_data_noexcept() {
+    NoExceptSwapper impl;
+    Swapper* swapper = &impl;
     size_t size = sizeof(random_data);
     for (size_t i = 0; i < size / 2; ++i) {
-        swap_chars_noexcept(random_data[i], random_data[size - 1 - i]);
+        swapper->swap(random_data[i], random_data[size - 1 - i]);
     }
 }
 
-// Function without noexcept specifier
-void swap_chars_regular(char& a, char& b) {
-    std::swap(a, b);
-}
-
 void process_data_regular() {
+    RegularSwapper impl;
+    Swapper* swapper = &impl;
     size_t size = sizeof(random_data);
     for (size_t i = 0; i < size / 2; ++i) {
-        swap_chars_regular(random_data[i], random_data[size - 1 - i]);
+        swapper->swap(random_data[i], random_data[size - 1 - i]);
     }
 }
 
