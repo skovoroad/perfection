@@ -3,3 +3,4 @@
 
 # Why?
 - noexcept has no effect on performance. Review design of test
+- research on kesl influence
