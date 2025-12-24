@@ -4,7 +4,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-PROJECTS=("inlining")
+PROJECTS=("inlining" "virtual" "noexcept")
 
 echo "============================================"
 echo "Running all benchmarks and disassembly"

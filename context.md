@@ -12,68 +12,42 @@
 
 ## Project Structure
 
-```
-perfection/
-├── inlining/               # Inlining comparison project
-│   ├── CMakeLists.txt      # Build configuration
-│   ├── main.cpp            # Source with inlined/non-inlined functions
-│   └── .build/             # Build artifacts (ignored)
-│
-├── skeleton/               # Template for new projects
-│   ├── CMakeLists.txt      # Same structure as inlining
-│   ├── main.cpp            # Empty functions as template
-│   └── .build/             # Build artifacts (ignored)
-│
-├── benchmark/              # Google Benchmark library (auto-installed)
-│
-├── benchmarks.sh           # Runs benchmarks for specified project
-├── disassembly.sh          # Generates disassembly for specified project
-├── run_all.sh              # Orchestrates all projects
-│
-├── .benchmarks/            # Benchmark results (ignored)
-│   └── <project>_benchmark.log
-│
-├── .disassembly/           # Disassembly outputs (ignored)
-│   └── <project>_<compiler>_<level>.dis
-│
-└── .gitignore              # Ignores build/output directories
-```
+**Benchmark Projects:**
+- `inlining/` - Inlining comparison (FORCE_INLINE vs NOINLINE)
+- `virtual/` - Virtual function dispatch comparison
+- `noexcept/` - noexcept specifier impact comparison
+- `skeleton/` - Template for creating new projects
+
+**Infrastructure:**
+- `benchmark/` - Google Benchmark library (auto-installed)
+- `.benchmarks/` - Benchmark results storage
+- `.disassembly/` - Disassembly outputs storage
+
+**Scripts:**
+- `benchmarks.sh` - Run benchmarks for a project across all compilers/optimization levels
+- `disassembly.sh` - Generate disassembly for a project
+- `run_all.sh` - Process all projects at once
+
+**Documentation:**
+- `context.md` - This file, project documentation
+- `candidates.md` - Ideas for future optimization tests
+- `.gitignore` - Excludes build/output directories
 
 ---
 
 ## Current Projects
 
 ### 1. inlining
+Compares performance impact of function inlining using `FORCE_INLINE` vs `NOINLINE` attributes. Benchmarks reverse a 1MB array using inlined and non-inlined swap functions.
 
-**Goal**: Compare performance impact of function inlining
+### 2. virtual
+Compares virtual function calls vs non-virtual function calls. Uses class hierarchy with base class pointer to force vtable lookup in virtual version.
 
-**Functions**:
-- `process_random_data_inlined()` - uses `FORCE_INLINE` for `swap_chars_inlined()`
-- `process_random_data_noinline()` - uses `NOINLINE` for `swap_chars_noinline()`
+### 3. noexcept
+Compares performance impact of `noexcept` specifier on virtual functions. Tests whether declaring functions as `noexcept` affects runtime performance.
 
-**Implementation**: Reverses 1MB array (`random_data`) by swapping elements
-
-**Benchmarks**: `BM_process_inlined` vs `BM_process_noinline`
-
-**Key Files**:
-- [`inlining/main.cpp`](file:///home/lipkin/dev/o/perfection/inlining/main.cpp) - implementation
-- [`inlining/CMakeLists.txt`](file:///home/lipkin/dev/o/perfection/inlining/CMakeLists.txt) - build config
-
-### 2. skeleton
-
-**Goal**: Template for creating new optimization comparison projects
-
-**Functions**:
-- `skeleton()` - empty placeholder
-- `skeleton_optimized()` - empty placeholder
-
-**Benchmarks**: `BM_skeleton` vs `BM_skeleton_optimized`
-
-**Usage**: Copy `skeleton/` directory, rename functions, add implementation
-
-**Key Files**:
-- [`skeleton/main.cpp`](file:///home/lipkin/dev/o/perfection/skeleton/main.cpp) - template
-- [`skeleton/CMakeLists.txt`](file:///home/lipkin/dev/o/perfection/skeleton/CMakeLists.txt) - build config
+### 4. skeleton
+Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
 
@@ -167,7 +141,7 @@ cmake --build .build
 ./run_all.sh
 ```
 
-**Projects List**: Edit `PROJECTS=("inlining")` to add more
+**Projects List**: Edit `PROJECTS=("inlining" "virtual" "noexcept")` to add more
 
 **Workflow**:
 1. For each project:
