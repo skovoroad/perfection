@@ -54,7 +54,7 @@ for compiler in "${COMPILERS[@]}"; do
         echo "============================================"
         
         echo "========== ${compiler} -${opt_level} ==========" >> "${BENCHMARK_FILE}"
-        "${BUILD_DIR}/${PROJECT_NAME}" >> "${BENCHMARK_FILE}" 2>&1
+        "${BUILD_DIR}/${PROJECT_NAME}" 2>&1 | grep -E "^(Benchmark|BM_|---)" >> "${BENCHMARK_FILE}"
         echo "" >> "${BENCHMARK_FILE}"
         
         echo ""
