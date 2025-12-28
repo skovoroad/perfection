@@ -16,6 +16,7 @@
 - `inlining/` - Inlining comparison (FORCE_INLINE vs NOINLINE)
 - `virtual/` - Virtual function dispatch comparison
 - `noexcept/` - noexcept specifier impact comparison
+- `exception/` - Exception handling vs return codes comparison
 - `skeleton/` - Template for creating new projects
 
 **Infrastructure:**
@@ -46,7 +47,10 @@ Compares virtual function calls vs non-virtual function calls. Uses class hierar
 ### 3. noexcept
 Compares performance impact of `noexcept` specifier on virtual functions. Tests whether declaring functions as `noexcept` affects runtime performance.
 
-### 4. skeleton
+### 4. exception
+Compares exception handling vs return code error handling. Benchmarks swap operations that fail based on parity checks, using exceptions vs return codes.
+
+### 5. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
@@ -141,7 +145,7 @@ cmake --build .build
 ./run_all.sh
 ```
 
-**Projects List**: Edit `PROJECTS=("inlining" "virtual" "noexcept")` to add more
+**Projects List**: Edit `PROJECTS=("inlining" "virtual" "noexcept" "exception")` to add more
 
 **Workflow**:
 1. For each project:
@@ -172,7 +176,7 @@ cmake --build .build
 
 4. **Add to run_all.sh**:
    ```bash
-   PROJECTS=("inlining" "my_new_project")
+   PROJECTS=("inlining" "exception" "my_new_project")
    ```
 
 5. **Test**:
@@ -232,6 +236,7 @@ ls .disassembly/
 
 ### Projects
 - [`inlining/main.cpp`](file:///home/lipkin/dev/o/perfection/inlining/main.cpp) - inlining comparison
+- [`exception/main.cpp`](file:///home/lipkin/dev/o/perfection/exception/main.cpp) - exception handling comparison
 - [`skeleton/main.cpp`](file:///home/lipkin/dev/o/perfection/skeleton/main.cpp) - project template
 
 ---
