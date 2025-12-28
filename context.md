@@ -30,6 +30,7 @@
 - `benchmarks.sh` - Run benchmarks for a project across all compilers/optimization levels
 - `disassembly.sh` - Generate disassembly for a project
 - `run_all.sh` - Process all projects at once
+- `build_common.sh` - Shared build functions (sourced by other scripts)
 
 **Documentation:**
 - `context.md` - This file, project documentation
@@ -214,6 +215,24 @@ All builds are centralized in `.build/<project>/<compiler>_<opt_level>/` structu
 1. For each project:
    - Run `benchmarks.sh <project>`
    - Run `disassembly.sh <project>`
+
+### build_common.sh
+
+**Purpose**: Shared build functions to eliminate code duplication between automation scripts
+
+**Usage**: Sourced by `benchmarks.sh` and `disassembly.sh`:
+```bash
+source "${SCRIPT_DIR}/build_common.sh"
+build_project "${PROJECT_DIR}" "${BUILD_DIR}" "${compiler}" "${opt_level}"
+```
+
+**Key Function**:
+- `build_project <project_dir> <build_dir> <compiler> <opt_level>` - Executes CMake configure and build
+
+**Why It Exists**:
+- Eliminates duplicate build logic across scripts
+- Ensures consistent build process
+- Single point of maintenance for build commands
 
 ---
 

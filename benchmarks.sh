@@ -2,6 +2,10 @@
 
 set -e
 
+# Source common build functions
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/build_common.sh"
+
 if [ $# -ne 1 ]; then
     echo "Usage: $0 <project_name>"
     echo "Example: $0 inlining"
@@ -9,8 +13,6 @@ if [ $# -ne 1 ]; then
 fi
 
 PROJECT_NAME="$1"
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${SCRIPT_DIR}/${PROJECT_NAME}"
 BUILD_BASE_DIR="${SCRIPT_DIR}/.build"
 BENCHMARKS_DIR="${SCRIPT_DIR}/.benchmarks/${PROJECT_NAME}"
@@ -44,10 +46,7 @@ for compiler in "${COMPILERS[@]}"; do
         echo "Build dir: ${BUILD_DIR}"
         echo "============================================"
         
-        cmake -S "${PROJECT_DIR}" -B "${BUILD_DIR}" \
-            -DCOMPILER_CHOICE="${compiler}" \
-            -DOPTIMIZATION_LEVEL="${opt_level}"
-        cmake --build "${BUILD_DIR}"
+        build_project "${PROJECT_DIR}" "${BUILD_DIR}" "${compiler}" "${opt_level}"
         
         echo ""
         echo "============================================"
