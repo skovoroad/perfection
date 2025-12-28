@@ -57,6 +57,26 @@ Empty template project for creating new optimization comparison tests. Contains 
 
 ## CMake Build System
 
+### Common Configuration
+
+All projects use a shared CMake configuration located in `cmake/PerfectionCommon.cmake`. This eliminates code duplication and ensures consistent build settings across all projects.
+
+**Key Benefits**:
+- Centralized compiler selection logic
+- Shared Google Benchmark setup
+- Consistent optimization level handling
+- Easy maintenance and updates
+
+### Project Structure
+
+Each project's `CMakeLists.txt` is minimal (5-10 lines):
+```cmake
+cmake_minimum_required(VERSION 3.10)
+include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/PerfectionCommon.cmake)
+project(my_project VERSION 1.0)
+perfection_setup_project(my_project)
+```
+
 ### Compiler Selection
 
 Each project's `CMakeLists.txt` supports:
@@ -166,8 +186,7 @@ cmake --build .build
 
 2. **Update CMakeLists.txt**:
    - Change `project(skeleton ...)` → `project(my_new_project ...)`
-   - Change `add_executable(skeleton ...)` → `add_executable(my_new_project ...)`
-   - Update `target_link_libraries(skeleton ...)` → `target_link_libraries(my_new_project ...)`
+   - Change `perfection_setup_project(skeleton)` → `perfection_setup_project(my_new_project)`
 
 3. **Update main.cpp**:
    - Rename functions: `skeleton()` → `my_function()`
