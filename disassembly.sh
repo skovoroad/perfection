@@ -62,20 +62,30 @@ for compiler in "${COMPILERS[@]}"; do
         echo "Optimization: -${opt_level}" >> "${DISASM_FILE}"
         echo "" >> "${DISASM_FILE}"
         
-        echo "========== process_random_data_inlined ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*process_random_data_inlined.*>:/,/^$/' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
-            sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
-        echo "" >> "${DISASM_FILE}"
+        # Extract functions starting with process_ or swap
+        FUNCTIONS=$(grep -E '^[0-9a-f]+ <(process_|swap)' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
+                    sed 's/^[0-9a-f]\+ <\(.*\)>:/\1/')
         
-        echo "========== process_random_data_noinline ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*process_random_data_noinline.*>:/,/^$/' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
-            sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
-        echo "" >> "${DISASM_FILE}"
-        
-        echo "========== swap_chars_noinline ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*swap_chars_noinline.*>:/,/^$/' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
-            sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
-        echo "" >> "${DISASM_FILE}"
+        # Extract each relevant function
+        while IFS= read -r funcname; do
+            if [ -n "$funcname" ]; then
+                echo "========== $funcname ==========" >> "${DISASM_FILE}"
+                # Read file line by line, extract from function start to empty line
+                in_function=0
+                while IFS= read -r line; do
+                    if [[ "$line" == *"<${funcname}>:"* ]]; then
+                        in_function=1
+                    fi
+                    if [ $in_function -eq 1 ]; then
+                        echo "$line" | sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
+                        if [ -z "$line" ]; then
+                            break
+                        fi
+                    fi
+                done < "${DISASM_DIR}/full_${compiler}_${opt_level}.dis"
+                echo "" >> "${DISASM_FILE}"
+            fi
+        done <<< "$FUNCTIONS"
         
         rm "${DISASM_DIR}/full_${compiler}_${opt_level}.dis"
         

@@ -192,9 +192,10 @@ All builds are centralized in `.build/<project>/<compiler>_<opt_level>/` structu
 **Output**: `.disassembly/<project>/<compiler>_<level>.dis`
 
 **Features**:
-- Uses `objdump -d -C` for disassembly
+- Uses `objdump -d -C` for disassembly with demangled names
 - Strips memory addresses for easier comparison
-- Extracts specific functions (e.g., `process_random_data_inlined`)
+- Extracts functions starting with `process_` or `swap` prefix
+- Automatically discovers relevant functions (no hardcoding needed)
 
 **Example Output File**: `.disassembly/inlining/clang_O3.dis`
 
