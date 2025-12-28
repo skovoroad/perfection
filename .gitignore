@@ -1,5 +1,5 @@
 /benchmark/
 
-**/.build/
+/.build/
 /.benchmarks/
 /.disassembly/

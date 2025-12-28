@@ -12,8 +12,8 @@ PROJECT_NAME="$1"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${SCRIPT_DIR}/${PROJECT_NAME}"
-BUILD_DIR="${PROJECT_DIR}/.build"
-DISASM_DIR="${SCRIPT_DIR}/.disassembly"
+BUILD_BASE_DIR="${SCRIPT_DIR}/.build"
+DISASM_DIR="${SCRIPT_DIR}/.disassembly/${PROJECT_NAME}"
 
 if [ ! -d "${PROJECT_DIR}" ]; then
     echo "Error: Project directory ${PROJECT_DIR} does not exist"
@@ -34,14 +34,14 @@ echo ""
 
 for compiler in "${COMPILERS[@]}"; do
     for opt_level in "${OPT_LEVELS[@]}"; do
+        BUILD_DIR="${BUILD_BASE_DIR}/${PROJECT_NAME}/${compiler}_${opt_level}"
         EXECUTABLE="${BUILD_DIR}/${PROJECT_NAME}"
-        DISASM_FILE="${DISASM_DIR}/${PROJECT_NAME}_${compiler}_${opt_level}.dis"
+        DISASM_FILE="${DISASM_DIR}/${compiler}_${opt_level}.dis"
         
         echo "============================================"
         echo "Building ${PROJECT_NAME} with ${compiler} -${opt_level}..."
+        echo "Build dir: ${BUILD_DIR}"
         echo "============================================"
-        
-        rm -rf "${BUILD_DIR}"
         
         cmake -S "${PROJECT_DIR}" -B "${BUILD_DIR}" \
             -DCOMPILER_CHOICE="${compiler}" \
@@ -53,7 +53,7 @@ for compiler in "${COMPILERS[@]}"; do
         echo "Disassembling with ${compiler} -${opt_level}..."
         echo "============================================"
         
-        objdump -d -C "${EXECUTABLE}" > "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis"
+        objdump -d -C "${EXECUTABLE}" > "${DISASM_DIR}/full_${compiler}_${opt_level}.dis"
         
         > "${DISASM_FILE}"
         
@@ -63,21 +63,21 @@ for compiler in "${COMPILERS[@]}"; do
         echo "" >> "${DISASM_FILE}"
         
         echo "========== process_random_data_inlined ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*process_random_data_inlined.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" | \
+        awk '/^[0-9a-f]+ <.*process_random_data_inlined.*>:/,/^$/' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
             sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
         echo "" >> "${DISASM_FILE}"
         
         echo "========== process_random_data_noinline ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*process_random_data_noinline.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" | \
+        awk '/^[0-9a-f]+ <.*process_random_data_noinline.*>:/,/^$/' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
             sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
         echo "" >> "${DISASM_FILE}"
         
         echo "========== swap_chars_noinline ==========" >> "${DISASM_FILE}"
-        awk '/^[0-9a-f]+ <.*swap_chars_noinline.*>:/,/^$/' "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis" | \
+        awk '/^[0-9a-f]+ <.*swap_chars_noinline.*>:/,/^$/' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
             sed 's/^[ ]*[0-9a-f]\+://' >> "${DISASM_FILE}"
         echo "" >> "${DISASM_FILE}"
         
-        rm "${DISASM_DIR}/full-${PROJECT_NAME}-${compiler}-${opt_level}.dis"
+        rm "${DISASM_DIR}/full_${compiler}_${opt_level}.dis"
         
         echo "Saved to: ${DISASM_FILE}"
         echo ""
@@ -91,11 +91,11 @@ echo ""
 echo "Generated files:"
 for compiler in "${COMPILERS[@]}"; do
     for opt_level in "${OPT_LEVELS[@]}"; do
-        echo "  - ${PROJECT_NAME}_${compiler}_${opt_level}.dis"
+        echo "  - ${compiler}_${opt_level}.dis"
     done
 done
 echo ""
 echo "To view a specific disassembly:"
-echo "  cat ${DISASM_DIR}/${PROJECT_NAME}_clang_O3.dis"
+echo "  cat ${DISASM_DIR}/clang_O3.dis"
 echo "  or"
 echo "  less ${DISASM_DIR}/${PROJECT_NAME}_gcc_O2.dis"

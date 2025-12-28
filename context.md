@@ -21,8 +21,10 @@
 
 **Infrastructure:**
 - `benchmark/` - Google Benchmark library (auto-installed)
-- `.benchmarks/` - Benchmark results storage
-- `.disassembly/` - Disassembly outputs storage
+- `cmake/` - Common CMake configuration
+- `.build/` - Centralized build directory (all projects and configurations)
+- `.benchmarks/` - Benchmark results organized by project
+- `.disassembly/` - Disassembly outputs organized by project
 
 **Scripts:**
 - `benchmarks.sh` - Run benchmarks for a project across all compilers/optimization levels
@@ -99,14 +101,54 @@ Each project's `CMakeLists.txt` supports:
 
 ```bash
 cd inlining
-cmake -S . -B .build -DCOMPILER_CHOICE=clang -DOPTIMIZATION_LEVEL=O3
-cmake --build .build
-./.build/inlining
+cmake -S . -B ../.build/inlining/gcc_O3 -DCOMPILER_CHOICE=gcc -DOPTIMIZATION_LEVEL=O3
+cmake --build ../.build/inlining/gcc_O3
+../.build/inlining/gcc_O3/inlining
 ```
+
+**Note**: Manual builds are stored in `.build/<project>/<compiler>_<opt_level>/` to keep all builds organized and persistent.
 
 ---
 
 ## Automation Scripts
+
+### Build Structure
+
+All builds are centralized in `.build/<project>/<compiler>_<opt_level>/` structure:
+
+**Benefits**:
+- **No Rebuilds**: Different configurations don't overwrite each other
+- **Fast Iteration**: Re-running scripts only rebuilds changed code
+- **Easy Comparison**: All binaries available side-by-side
+- **Organized Output**: Results grouped by project in `.benchmarks/` and `.disassembly/`
+
+**Example Structure**:
+```
+.build/
+  exception/
+    clang_O0/
+    clang_O1/
+    clang_O2/
+    clang_O3/
+    gcc_O0/
+    ...
+  inlining/
+    clang_O0/
+    ...
+.benchmarks/
+  exception/
+    benchmark.log
+  inlining/
+    benchmark.log
+.disassembly/
+  exception/
+    clang_O3.dis
+    gcc_O3.dis
+    ...
+  inlining/
+    clang_O3.dis
+    ...
+```
 
 ### benchmarks.sh
 
@@ -123,7 +165,7 @@ cmake --build .build
 - Optimization levels: `O0`, `O1`, `O2`, `O3`
 - Total runs: 8 (2 compilers × 4 levels)
 
-**Output**: `.benchmarks/<project>_benchmark.log`
+**Output**: `.benchmarks/<project>/benchmark.log`
 
 **Format**:
 ```
@@ -147,14 +189,14 @@ cmake --build .build
 
 **Configuration**: Same as `benchmarks.sh`
 
-**Output**: `.disassembly/<project>_<compiler>_<level>.dis`
+**Output**: `.disassembly/<project>/<compiler>_<level>.dis`
 
 **Features**:
 - Uses `objdump -d -C` for disassembly
 - Strips memory addresses for easier comparison
 - Extracts specific functions (e.g., `process_random_data_inlined`)
 
-**Example Output File**: `inlining_clang_O3.dis`
+**Example Output File**: `.disassembly/inlining/clang_O3.dis`
 
 ### run_all.sh
 
@@ -212,10 +254,10 @@ cmake --build .build
 
 ```bash
 ./benchmarks.sh inlining
-grep "gcc -O3" .benchmarks/inlining_benchmark.log -A 10
+grep "gcc -O3" .benchmarks/inlining/benchmark.log -A 10
 
 ./disassembly.sh inlining
-cat .disassembly/inlining_gcc_O3.dis
+cat .disassembly/inlining/gcc_O3.dis
 ```
 
 ### Compare Clang vs GCC at O2
@@ -224,8 +266,8 @@ cat .disassembly/inlining_gcc_O3.dis
 # Run benchmarks
 ./benchmarks.sh inlining
 
-# Compare results
-diff .disassembly/inlining_clang_O2.dis .disassembly/inlining_gcc_O2.dis
+# Compare disassembly
+diff .disassembly/inlining/clang_O2.dis .disassembly/inlining/gcc_O2.dis
 ```
 
 ### Full Analysis of All Projects
@@ -235,7 +277,8 @@ diff .disassembly/inlining_clang_O2.dis .disassembly/inlining_gcc_O2.dis
 
 # View all benchmark results
 ls .benchmarks/
-cat .benchmarks/inlining_benchmark.log
+cat .benchmarks/inlining/benchmark.log
+cat .benchmarks/exception/benchmark.log
 
 # View all disassembly
 ls .disassembly/
@@ -263,13 +306,13 @@ ls .disassembly/
 ## Common Commands
 
 ```bash
-# Build single project manually
+# Build single project manually (organized in centralized .build/)
 cd inlining
-cmake -S . -B .build -DCOMPILER_CHOICE=gcc -DOPTIMIZATION_LEVEL=O2
-cmake --build .build
-./.build/inlining
+cmake -S . -B ../.build/inlining/gcc_O2 -DCOMPILER_CHOICE=gcc -DOPTIMIZATION_LEVEL=O2
+cmake --build ../.build/inlining/gcc_O2
+../.build/inlining/gcc_O2/inlining
 
-# Run benchmarks for one project
+# Run benchmarks for one project (fast, uses cached builds)
 ./benchmarks.sh inlining
 
 # Generate disassembly for one project
@@ -278,14 +321,24 @@ cmake --build .build
 # Process all projects
 ./run_all.sh
 
-# View benchmark results
-cat .benchmarks/inlining_benchmark.log
+# View benchmark results (organized by project)
+cat .benchmarks/inlining/benchmark.log
+cat .benchmarks/exception/benchmark.log
 
-# View disassembly
-cat .disassembly/inlining_gcc_O3.dis
+# View disassembly (organized by project)
+cat .disassembly/inlining/gcc_O3.dis
 
 # Compare disassemblies
-diff .disassembly/inlining_clang_O3.dis .disassembly/inlining_gcc_O3.dis
+diff .disassembly/inlining/clang_O3.dis .disassembly/inlining/gcc_O3.dis
+
+# Clean specific build configuration
+rm -rf .build/inlining/gcc_O3
+
+# Clean all builds for a project
+rm -rf .build/inlining/
+
+# Clean everything
+rm -rf .build/ .benchmarks/ .disassembly/
 ```
 
 ---
@@ -295,6 +348,16 @@ diff .disassembly/inlining_clang_O3.dis .disassembly/inlining_gcc_O3.dis
 ### Why Multi-Project Structure?
 
 Allows systematic comparison of different optimization strategies without code duplication. Each project focuses on one specific optimization technique.
+
+### Why Centralized Build Directory?
+
+**Benefits**:
+- **No Redundant Rebuilds**: Different compiler/optimization configurations coexist
+- **Fast Iteration**: Re-running scripts only builds what changed
+- **Easy Management**: All builds in one place (`.build/`)
+- **Results Organization**: Outputs grouped by project in `.benchmarks/` and `.disassembly/`
+
+**Structure**: `.build/<project>/<compiler>_<optlevel>/` keeps everything organized and accessible.
 
 ### Why Centralized Scripts?
 

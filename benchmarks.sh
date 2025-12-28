@@ -12,9 +12,9 @@ PROJECT_NAME="$1"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="${SCRIPT_DIR}/${PROJECT_NAME}"
-BUILD_DIR="${PROJECT_DIR}/.build"
-BENCHMARKS_DIR="${SCRIPT_DIR}/.benchmarks"
-BENCHMARK_FILE="${BENCHMARKS_DIR}/${PROJECT_NAME}_benchmark.log"
+BUILD_BASE_DIR="${SCRIPT_DIR}/.build"
+BENCHMARKS_DIR="${SCRIPT_DIR}/.benchmarks/${PROJECT_NAME}"
+BENCHMARK_FILE="${BENCHMARKS_DIR}/benchmark.log"
 
 if [ ! -d "${PROJECT_DIR}" ]; then
     echo "Error: Project directory ${PROJECT_DIR} does not exist"
@@ -37,11 +37,12 @@ echo ""
 
 for compiler in "${COMPILERS[@]}"; do
     for opt_level in "${OPT_LEVELS[@]}"; do
+        BUILD_DIR="${BUILD_BASE_DIR}/${PROJECT_NAME}/${compiler}_${opt_level}"
+        
         echo "============================================"
         echo "Building ${PROJECT_NAME} with ${compiler} -${opt_level}..."
+        echo "Build dir: ${BUILD_DIR}"
         echo "============================================"
-        
-        rm -rf "${BUILD_DIR}"
         
         cmake -S "${PROJECT_DIR}" -B "${BUILD_DIR}" \
             -DCOMPILER_CHOICE="${compiler}" \
