@@ -16,7 +16,7 @@ void initialize_random_data() {
 // Non-virtual swapper class
 class NoVirtualSwapper {
 public:
-    void swap(char& a, char& b) {
+    void prfct_swap(char& a, char& b) {
         std::swap(a, b);
     }
 };
@@ -25,31 +25,31 @@ public:
 class VirtualSwapper {
 public:
     virtual ~VirtualSwapper() = default;
-    virtual void swap(char& a, char& b) = 0;
+    virtual void prfct_swap(char& a, char& b) = 0;
 };
 
 // Implementation of virtual interface
 class VirtualSwapperImpl : public VirtualSwapper {
 public:
-    virtual void swap(char& a, char& b) override {
+    virtual void prfct_swap(char& a, char& b) override {
         std::swap(a, b);
     }
 };
 
-void process_data_nonvirtual() {
+void prfct_process_data_nonvirtual() {
     NoVirtualSwapper swapper;
     size_t size = sizeof(random_data);
     for (size_t i = 0; i < size / 2; ++i) {
-        swapper.swap(random_data[i], random_data[size - 1 - i]);
+        swapper.prfct_swap(random_data[i], random_data[size - 1 - i]);
     }
 }
 
-void process_data_virtual() {
+void prfct_process_data_virtual() {
     VirtualSwapperImpl impl;
     VirtualSwapper* swapper = &impl;
     size_t size = sizeof(random_data);
     for (size_t i = 0; i < size / 2; ++i) {
-        swapper->swap(random_data[i], random_data[size - 1 - i]);
+        swapper->prfct_swap(random_data[i], random_data[size - 1 - i]);
     }
 }
 
@@ -57,7 +57,7 @@ static void BM_nonvirtual(benchmark::State& state) {
     initialize_random_data();
     
     for (auto _ : state) {
-        process_data_nonvirtual();
+        prfct_process_data_nonvirtual();
         benchmark::DoNotOptimize(random_data);
     }
 }
@@ -66,7 +66,7 @@ static void BM_virtual(benchmark::State& state) {
     initialize_random_data();
     
     for (auto _ : state) {
-        process_data_virtual();
+        prfct_process_data_virtual();
         benchmark::DoNotOptimize(random_data);
     }
 }

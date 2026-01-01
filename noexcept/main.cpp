@@ -17,13 +17,13 @@ void initialize_random_data() {
 class Swapper {
 public:
     virtual ~Swapper() = default;
-    virtual void swap(char& a, char& b) = 0;
+    virtual void prfct_swap(char& a, char& b) = 0;
 };
 
 // Implementation with noexcept
 class NoExceptSwapper : public Swapper {
 public:
-    virtual void swap(char& a, char& b) noexcept override {
+    virtual void prfct_swap(char& a, char& b) noexcept override {
         std::swap(a, b);
     }
 };
@@ -31,26 +31,26 @@ public:
 // Implementation without noexcept
 class RegularSwapper : public Swapper {
 public:
-    virtual void swap(char& a, char& b) override {
+    virtual void prfct_swap(char& a, char& b) override {
         std::swap(a, b);
     }
 };
 
-void process_data_noexcept() {
+void prfct_process_data_noexcept() {
     NoExceptSwapper impl;
     Swapper* swapper = &impl;
     size_t size = sizeof(random_data);
     for (size_t i = 0; i < size / 2; ++i) {
-        swapper->swap(random_data[i], random_data[size - 1 - i]);
+        swapper->prfct_swap(random_data[i], random_data[size - 1 - i]);
     }
 }
 
-void process_data_regular() {
+void prfct_process_data_regular() {
     RegularSwapper impl;
     Swapper* swapper = &impl;
     size_t size = sizeof(random_data);
     for (size_t i = 0; i < size / 2; ++i) {
-        swapper->swap(random_data[i], random_data[size - 1 - i]);
+        swapper->prfct_swap(random_data[i], random_data[size - 1 - i]);
     }
 }
 
@@ -58,7 +58,7 @@ static void BM_noexcept(benchmark::State& state) {
     initialize_random_data();
     
     for (auto _ : state) {
-        process_data_noexcept();
+        prfct_process_data_noexcept();
         benchmark::DoNotOptimize(random_data);
     }
 }
@@ -67,7 +67,7 @@ static void BM_regular(benchmark::State& state) {
     initialize_random_data();
     
     for (auto _ : state) {
-        process_data_regular();
+        prfct_process_data_regular();
         benchmark::DoNotOptimize(random_data);
     }
 }

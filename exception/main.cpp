@@ -15,7 +15,7 @@ void initialize_random_data() {
 }
 
 // Version with return code
-bool swap_chars_return_code(char& a, char& b) {
+bool prfct_swap_chars_return_code(char& a, char& b) {
     // Only swap if both values are even or both are odd
     bool a_even = (static_cast<unsigned char>(a) % 2) == 0;
     bool b_even = (static_cast<unsigned char>(b) % 2) == 0;
@@ -27,19 +27,19 @@ bool swap_chars_return_code(char& a, char& b) {
     return false;
 }
 
-void process_random_data_return_code() {
+void prfct_process_random_data_return_code() {
     size_t size = sizeof(random_data);
     [[maybe_unused]] size_t error_count = 0;
     
     for (size_t i = 0; i < size / 2; ++i) {
-        if (!swap_chars_return_code(random_data[i], random_data[size - 1 - i])) {
+        if (!prfct_swap_chars_return_code(random_data[i], random_data[size - 1 - i])) {
             error_count++;
         }
     }
 }
 
 // Version with exception
-void swap_chars_exception(char& a, char& b) {
+void prfct_swap_chars_exception(char& a, char& b) {
     // Only swap if both values are even or both are odd
     bool a_even = (static_cast<unsigned char>(a) % 2) == 0;
     bool b_even = (static_cast<unsigned char>(b) % 2) == 0;
@@ -51,13 +51,13 @@ void swap_chars_exception(char& a, char& b) {
     }
 }
 
-void process_random_data_exception() {
+void prfct_process_random_data_exception() {
     size_t size = sizeof(random_data);
     [[maybe_unused]] size_t error_count = 0;
     
     for (size_t i = 0; i < size / 2; ++i) {
         try {
-            swap_chars_exception(random_data[i], random_data[size - 1 - i]);
+            prfct_swap_chars_exception(random_data[i], random_data[size - 1 - i]);
         } catch (const std::runtime_error&) {
             error_count++;
         }
@@ -68,7 +68,7 @@ static void BM_process_return_code(benchmark::State& state) {
     initialize_random_data();
     
     for (auto _ : state) {
-        process_random_data_return_code();
+        prfct_process_random_data_return_code();
         benchmark::DoNotOptimize(random_data);
     }
 }
@@ -77,7 +77,7 @@ static void BM_process_exception(benchmark::State& state) {
     initialize_random_data();
     
     for (auto _ : state) {
-        process_random_data_exception();
+        prfct_process_random_data_exception();
         benchmark::DoNotOptimize(random_data);
     }
 }

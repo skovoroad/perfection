@@ -18,25 +18,25 @@ void initialize_random_data() {
     }
 }
 
-FORCE_INLINE void swap_chars_inlined(char& a, char& b) {
+FORCE_INLINE void prfct_swap_chars_inlined(char& a, char& b) {
     std::swap(a, b);
 }
 
-void process_random_data_inlined() {
+void prfct_process_random_data_inlined() {
     size_t size = sizeof(random_data);
     for (size_t i = 0; i < size / 2; ++i) {
-        swap_chars_inlined(random_data[i], random_data[size - 1 - i]);
+        prfct_swap_chars_inlined(random_data[i], random_data[size - 1 - i]);
     }
 }
 
-NOINLINE void swap_chars_noinline(char& a, char& b) {
+NOINLINE void prfct_swap_chars_noinline(char& a, char& b) {
     std::swap(a, b);
 }
 
-void process_random_data_noinline() {
+void prfct_process_random_data_noinline() {
     size_t size = sizeof(random_data);
     for (size_t i = 0; i < size / 2; ++i) {
-        swap_chars_noinline(random_data[i], random_data[size - 1 - i]);
+        prfct_swap_chars_noinline(random_data[i], random_data[size - 1 - i]);
     }
 }
 
@@ -44,7 +44,7 @@ static void BM_process_inlined(benchmark::State& state) {
     initialize_random_data();
     
     for (auto _ : state) {
-        process_random_data_inlined();
+        prfct_process_random_data_inlined();
         benchmark::DoNotOptimize(random_data);
     }
 }
@@ -53,7 +53,7 @@ static void BM_process_noinline(benchmark::State& state) {
     initialize_random_data();
     
     for (auto _ : state) {
-        process_random_data_noinline();
+        prfct_process_random_data_noinline();
         benchmark::DoNotOptimize(random_data);
     }
 }
