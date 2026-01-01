@@ -53,7 +53,10 @@ Compares performance impact of `noexcept` specifier on virtual functions. Tests 
 ### 4. exception
 Compares exception handling vs return code error handling. Benchmarks swap operations that fail based on parity checks, using exceptions vs return codes.
 
-### 5. skeleton
+### 5. cache_locality
+Compares sequential vs strided memory access patterns to demonstrate cache locality effects. Uses a 16MB array with sequential iteration vs 1024-element stride (4KB jumps) to show impact of cache misses and hardware prefetching.
+
+### 6. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
