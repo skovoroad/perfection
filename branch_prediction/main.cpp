@@ -15,19 +15,16 @@ void initialize_data() {
     }
 }
 
-// Predictable branch pattern:
-// Pass 1: threshold 195 (almost always true: sum in [2, 200])
-// Pass 2: threshold 195 (almost always false)
-// Pattern: T T T T T ... F F F → highly predictable for branch predictor
+// ========== BASELINE: No attributes ==========
+
+// Predictable: ~97% true, highly predictable for branch predictor
 void prfct_swap_predictable() {
-    // Pass 1: sum < 195 (~97.5% true)
     for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
         if (data[i] + data[ARRAY_SIZE - 1 - i] < 195) {
             std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
         }
     }
     
-    // Pass 2: sum > 195 (~2.5% true)
     for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
         if (data[i] + data[ARRAY_SIZE - 1 - i] > 195) {
             std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
@@ -35,19 +32,14 @@ void prfct_swap_predictable() {
     }
 }
 
-// Unpredictable branch pattern:
-// Pass 1: threshold 100 (~50% true)
-// Pass 2: threshold 100 (~50% true)
-// Pattern: T F T T F T F T ... → unpredictable, ~50% branch misses
+// Unpredictable: ~50% true, causes branch mispredictions
 void prfct_swap_unpredictable() {
-    // Pass 1: sum < 100 (~49% true)
     for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
         if (data[i] + data[ARRAY_SIZE - 1 - i] < 100) {
             std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
         }
     }
     
-    // Pass 2: sum >= 100 (~51% true)
     for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
         if (data[i] + data[ARRAY_SIZE - 1 - i] >= 100) {
             std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
@@ -55,9 +47,78 @@ void prfct_swap_unpredictable() {
     }
 }
 
+// ========== PREDICTABLE + [[likely]]: Correct hint ==========
+// Hint matches reality: branch is ~97% taken
+// Expected: Helps with code layout, slight improvement
+void prfct_swap_predictable_likely() {
+    for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
+        if (data[i] + data[ARRAY_SIZE - 1 - i] < 195) [[likely]] {
+            std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
+        }
+    }
+    
+    for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
+        if (data[i] + data[ARRAY_SIZE - 1 - i] > 195) [[unlikely]] {
+            std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
+        }
+    }
+}
+
+// ========== PREDICTABLE + [[unlikely]]: WRONG hint ==========
+// Hint contradicts reality: branch is ~97% taken but marked unlikely
+// Expected: Hurts code layout, performance degradation
+void prfct_swap_predictable_unlikely() {
+    for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
+        if (data[i] + data[ARRAY_SIZE - 1 - i] < 195) [[unlikely]] {
+            std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
+        }
+    }
+    
+    for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
+        if (data[i] + data[ARRAY_SIZE - 1 - i] > 195) [[likely]] {
+            std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
+        }
+    }
+}
+
+// ========== UNPREDICTABLE + [[likely]]: WRONG hint ==========
+// Hint contradicts reality: branch is ~50% but marked likely
+// Expected: Hurts code layout, performance degradation
+void prfct_swap_unpredictable_likely() {
+    for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
+        if (data[i] + data[ARRAY_SIZE - 1 - i] < 100) [[likely]] {
+            std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
+        }
+    }
+    
+    for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
+        if (data[i] + data[ARRAY_SIZE - 1 - i] >= 100) [[likely]] {
+            std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
+        }
+    }
+}
+
+// ========== UNPREDICTABLE + [[unlikely]]: WRONG hint ==========
+// Hint contradicts reality: branch is ~50% but marked unlikely
+// Expected: Hurts code layout, performance degradation
+void prfct_swap_unpredictable_unlikely() {
+    for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
+        if (data[i] + data[ARRAY_SIZE - 1 - i] < 100) [[unlikely]] {
+            std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
+        }
+    }
+    
+    for (size_t i = 0; i < ARRAY_SIZE / 2; ++i) {
+        if (data[i] + data[ARRAY_SIZE - 1 - i] >= 100) [[unlikely]] {
+            std::swap(data[i], data[ARRAY_SIZE - 1 - i]);
+        }
+    }
+}
+
+// ========== BENCHMARKS ==========
+
 static void BM_predictable(benchmark::State& state) {
     initialize_data();
-    
     for (auto _ : state) {
         prfct_swap_predictable();
         benchmark::DoNotOptimize(data);
@@ -66,14 +127,54 @@ static void BM_predictable(benchmark::State& state) {
 
 static void BM_unpredictable(benchmark::State& state) {
     initialize_data();
-    
     for (auto _ : state) {
         prfct_swap_unpredictable();
         benchmark::DoNotOptimize(data);
     }
 }
 
+static void BM_predictable_likely(benchmark::State& state) {
+    initialize_data();
+    for (auto _ : state) {
+        prfct_swap_predictable_likely();
+        benchmark::DoNotOptimize(data);
+    }
+}
+
+static void BM_predictable_unlikely(benchmark::State& state) {
+    initialize_data();
+    for (auto _ : state) {
+        prfct_swap_predictable_unlikely();
+        benchmark::DoNotOptimize(data);
+    }
+}
+
+static void BM_unpredictable_likely(benchmark::State& state) {
+    initialize_data();
+    for (auto _ : state) {
+        prfct_swap_unpredictable_likely();
+        benchmark::DoNotOptimize(data);
+    }
+}
+
+static void BM_unpredictable_unlikely(benchmark::State& state) {
+    initialize_data();
+    for (auto _ : state) {
+        prfct_swap_unpredictable_unlikely();
+        benchmark::DoNotOptimize(data);
+    }
+}
+
+// Baseline
 BENCHMARK(BM_predictable);
 BENCHMARK(BM_unpredictable);
+
+// Correct hints
+BENCHMARK(BM_predictable_likely);
+
+// Wrong hints
+BENCHMARK(BM_predictable_unlikely);
+BENCHMARK(BM_unpredictable_likely);
+BENCHMARK(BM_unpredictable_unlikely);
 
 BENCHMARK_MAIN();

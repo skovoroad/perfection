@@ -22,6 +22,12 @@ Unpredictable branches catastrophically affect performance:
 - Each misprediction = ~20 cycles (pipeline flush)
 - Code is identical in both cases — the only difference is pattern predictability
 
+### [[likely]]/[[unlikely]] Attributes
+C++20 compiler hints affect code layout optimization:
+- **Correct hint** ([[likely]] on predictable ~97%): 9-13% speedup
+- **Wrong hint** ([[likely]]/[[unlikely]] on unpredictable ~50%): 3-10% slowdown
+- Attributes help only when hint matches reality
+
 ---
 
 ## ILP - Data Dependencies
