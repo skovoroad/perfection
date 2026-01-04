@@ -1,0 +1,32 @@
+# Performance Optimization Notes
+
+## Loop Unrolling
+
+**Project**: `ilp_no_data_dependencies`
+
+### Findings
+Manual loop unrolling is usually **useless or harmful** at high optimization levels:
+- GCC O3: sequential code is faster than any manual unrolling
+- Overly aggressive unrolling (16x, 32x) slows down code by 2x due to code bloat and register pressure
+- Compiler applies auto-unrolling and vectorization better than manual optimization
+
+---
+
+## Branch Prediction
+
+**Project**: `branch_prediction`
+
+### Findings
+Unpredictable branches catastrophically affect performance:
+- ~50% branch miss rate → 7-8x slowdown
+- Each misprediction = ~20 cycles (pipeline flush)
+- Code is identical in both cases — the only difference is pattern predictability
+
+---
+
+## Cache Locality
+
+**Project**: `cache_locality`
+
+### Findings
+Memory access patterns strongly impact performance due to cache misses and hardware prefetching.
