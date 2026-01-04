@@ -24,6 +24,18 @@ Unpredictable branches catastrophically affect performance:
 
 ---
 
+## ILP - Data Dependencies
+
+**Project**: `ilp_data_dependencies`
+
+### Findings
+Data dependencies between loop iterations prevent CPU from exploiting parallelism:
+- GCC O3: Independent 200ms vs Dependent 800ms → **4x slowdown**
+- Dependency chain (prev_avg) forces sequential execution
+- CPU must wait for iteration N-1 to complete before starting iteration N
+
+---
+
 ## Cache Locality
 
 **Project**: `cache_locality`

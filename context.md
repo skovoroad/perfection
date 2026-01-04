@@ -20,6 +20,7 @@
 - `cache_locality/` - Sequential vs strided memory access comparison
 - `branch_prediction/` - Predictable vs unpredictable branch patterns comparison
 - `ilp_no_data_dependencies/` - ILP through loop unrolling with independent operations
+- `ilp_data_dependencies/` - ILP impact of data dependencies between loop iterations
 - `skeleton/` - Template for creating new projects
 
 **Infrastructure:**
@@ -65,7 +66,10 @@ Compares predictable vs unpredictable branch patterns to demonstrate branch pred
 ### 7. ilp_no_data_dependencies
 Demonstrates Instruction-Level Parallelism (ILP) through loop unrolling. Compares sequential swaps (one per iteration) vs unrolled swaps (four independent swaps per iteration). The unrolled version allows CPU to execute multiple swap operations in parallel using superscalar execution, reducing loop overhead.
 
-### 8. skeleton
+### 8. ilp_data_dependencies
+Demonstrates impact of data dependencies on ILP. Compares independent iterations (each iteration uses current pair average) vs dependent iterations (uses previous pair average via prev_avg variable). The dependency chain in the dependent version prevents CPU from parallelizing iterations, showing ~2-3x performance difference.
+
+### 9. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
