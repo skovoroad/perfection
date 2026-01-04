@@ -19,6 +19,7 @@
 - `exception/` - Exception handling vs return codes comparison
 - `cache_locality/` - Sequential vs strided memory access comparison
 - `branch_prediction/` - Predictable vs unpredictable branch patterns comparison
+- `ilp_no_data_dependencies/` - ILP through loop unrolling with independent operations
 - `skeleton/` - Template for creating new projects
 
 **Infrastructure:**
@@ -61,7 +62,10 @@ Compares sequential vs strided memory access patterns to demonstrate cache local
 ### 6. branch_prediction
 Compares predictable vs unpredictable branch patterns to demonstrate branch predictor impact. Uses array of random numbers [1, 100] with conditional swaps based on sum thresholds: threshold 195 (highly predictable, ~97% same outcome) vs threshold 100 (~50% unpredictable, causes branch mispredictions).
 
-### 7. skeleton
+### 7. ilp_no_data_dependencies
+Demonstrates Instruction-Level Parallelism (ILP) through loop unrolling. Compares sequential swaps (one per iteration) vs unrolled swaps (four independent swaps per iteration). The unrolled version allows CPU to execute multiple swap operations in parallel using superscalar execution, reducing loop overhead.
+
+### 8. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
@@ -203,7 +207,7 @@ All builds are centralized in `.build/<project>/<compiler>_<opt_level>/` structu
 **Features**:
 - Uses `objdump -d -C` for disassembly with demangled names
 - Strips memory addresses for easier comparison
-- Extracts functions starting with `prfct_` prefix
+- Extracts functions containing `prfct_` prefix (both regular and template functions)
 - Automatically discovers relevant functions (no hardcoding needed)
 
 **Example Output File**: `.disassembly/inlining/clang_O3.dis`

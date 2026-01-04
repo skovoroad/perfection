@@ -61,8 +61,8 @@ for compiler in "${COMPILERS[@]}"; do
         echo "Optimization: -${opt_level}" >> "${DISASM_FILE}"
         echo "" >> "${DISASM_FILE}"
         
-        # Extract functions starting with prfct_
-        FUNCTIONS=$(grep -E '^[0-9a-f]+ <prfct_' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
+        # Extract functions with prfct_ in the name (both regular and template functions)
+        FUNCTIONS=$(grep -E '^[0-9a-f]+ <.*prfct_.*>' "${DISASM_DIR}/full_${compiler}_${opt_level}.dis" | \
                     sed 's/^[0-9a-f]\+ <\(.*\)>:/\1/')
         
         # Extract each relevant function
