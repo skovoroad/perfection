@@ -3,3 +3,6 @@
 /.build/
 /.benchmarks/
 /.disassembly/
+/isolated_builds/.build/
+/isolated_builds/.benchmarks/
+/isolated_builds/.disassembly/

@@ -33,8 +33,16 @@
 **Scripts:**
 - `benchmarks.sh` - Run benchmarks for a project across all compilers/optimization levels
 - `disassembly.sh` - Generate disassembly for a project
-- `run_all.sh` - Process all projects at once
-- `build_common.sh` - Shared build functions (sourced by other scripts)
+- `run_all.sh` - Run benchmarks and disassembly for all projects
+- `build_common.sh` - Shared build helper functions
+
+**Isolated Builds (Docker-based):**
+- `isolated_builds/` - Build with multiple compiler versions using Docker
+  - `build.sh` - Compile with GCC 7-13 and Clang 6-18 for optimization evolution analysis
+  - `benchmarks.sh` - Run Docker-built binaries natively on host
+  - `disassembly.sh` - Generate disassembly from Docker builds
+  - `run_all.sh` - Run build + benchmarks + disassembly for all projects
+  - `README.md` - Detailed workflow documentation
 
 **Documentation:**
 - `context.md` - This file, project documentation
