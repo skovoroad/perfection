@@ -17,6 +17,8 @@
 - `virtual/` - Virtual function dispatch comparison
 - `noexcept/` - noexcept specifier impact comparison
 - `exception/` - Exception handling vs return codes comparison
+- `cache_locality/` - Sequential vs strided memory access comparison
+- `branch_prediction/` - Predictable vs unpredictable branch patterns comparison
 - `skeleton/` - Template for creating new projects
 
 **Infrastructure:**
@@ -56,7 +58,10 @@ Compares exception handling vs return code error handling. Benchmarks swap opera
 ### 5. cache_locality
 Compares sequential vs strided memory access patterns to demonstrate cache locality effects. Uses a 16MB array with sequential iteration vs 1024-element stride (4KB jumps) to show impact of cache misses and hardware prefetching.
 
-### 6. skeleton
+### 6. branch_prediction
+Compares predictable vs unpredictable branch patterns to demonstrate branch predictor impact. Uses array of random numbers [1, 100] with conditional swaps based on sum thresholds: threshold 195 (highly predictable, ~97% same outcome) vs threshold 100 (~50% unpredictable, causes branch mispredictions).
+
+### 7. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
