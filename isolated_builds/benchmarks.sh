@@ -43,8 +43,15 @@ for binary in "${PROJECT_BUILD_DIR}"/*/"${PROJECT_NAME}"; do
         
         echo "========== ${config} ==========" | tee -a "${LOG_FILE}"
         
-        # Run binary on host
-        "${binary}" 2>&1 | tee -a "${LOG_FILE}"
+        # Run binary on host with minimal output (suppress system info)
+        "${binary}" --benchmark_color=false --benchmark_counters_tabular=false 2>&1 | \
+            grep -v "^Running " | \
+            grep -v "^Run on " | \
+            grep -v "^CPU Caches:" | \
+            grep -v "^  L[0-9]" | \
+            grep -v "^Load Average:" | \
+            grep -v "^\*\*\*WARNING\*\*\*" | \
+            tee -a "${LOG_FILE}"
         
         echo "" | tee -a "${LOG_FILE}"
     fi

@@ -30,26 +30,26 @@ fi
 # GCC 7-13 (2017-2023): major improvements in auto-vectorization and loop optimization
 # Clang 6-18 (2018-2024): steady evolution of optimizer
 COMPILERS=(
-    "gcc:7"      # 2017 - First stable modern vectorizer
-    "gcc:8"      # 2018 - Improved IPA optimizations
-    "gcc:9"      # 2019 - Better loop nest optimization
-    "gcc:10"     # 2020 - Enhanced auto-vectorization
-    "gcc:11"     # 2021 - Modern baseline
-    "gcc:12"     # 2022 - Incremental improvements
-    "gcc:13"     # 2023 - Latest stable
-    "clang:6"    # 2018 - C++17 support
-    "clang:7"    # 2018 - Improved vectorization
-    "clang:8"    # 2019 - Better optimization passes
-    "clang:9"    # 2019 - Enhanced loop optimizations
-    "clang:10"   # 2020 - Improved IPA
-    "clang:11"   # 2020 - Better auto-vectorization
-    "clang:12"   # 2021 - Modern baseline
-    "clang:13"   # 2021 - Enhanced optimizations
-    "clang:14"   # 2022 - Incremental improvements
-    "clang:15"   # 2022 - Better code generation
-    "clang:16"   # 2023 - Latest features
-    "clang:17"   # 2023 - Enhanced performance
-    "clang:18"   # 2024 - Current stable
+    "gcc:7"              # 2017 - First stable modern vectorizer
+    "gcc:8"              # 2018 - Improved IPA optimizations
+    "gcc:9"              # 2019 - Better loop nest optimization
+    "gcc:10"             # 2020 - Enhanced auto-vectorization
+    "gcc:11"             # 2021 - Modern baseline
+    "gcc:12"             # 2022 - Incremental improvements
+    "gcc:13"             # 2023 - Latest stable
+    "silkeh/clang:6"     # 2018 - C++17 support
+    "silkeh/clang:7"     # 2018 - Improved vectorization
+    "silkeh/clang:8"     # 2019 - Better optimization passes
+    "silkeh/clang:9"     # 2019 - Enhanced loop optimizations
+    "silkeh/clang:10"    # 2020 - Improved IPA
+    "silkeh/clang:11"    # 2020 - Better auto-vectorization
+    "silkeh/clang:12"    # 2021 - Modern baseline
+    "silkeh/clang:13"    # 2021 - Enhanced optimizations
+    "silkeh/clang:14"    # 2022 - Incremental improvements
+    "silkeh/clang:15"    # 2022 - Better code generation
+    "silkeh/clang:16"    # 2023 - Latest features
+    "silkeh/clang:17"    # 2023 - Enhanced performance
+    "silkeh/clang:18"    # 2024 - Current stable
 )
 
 OPT_LEVELS=("O0" "O1" "O2" "O3")
@@ -89,23 +89,71 @@ for compiler_image in "${COMPILERS[@]}"; do
             continue
         fi
         
-        # Build in Docker with static linking
+        # Build Google Benchmark inside Docker container if not already built for this compiler
+        BENCHMARK_BUILD_DIR="${BUILD_DIR}/.benchmark_cache/${compiler_name}"
+        BENCHMARK_LIB="${BENCHMARK_BUILD_DIR}/src/libbenchmark.a"
+        
+        if [ ! -f "${BENCHMARK_LIB}" ]; then
+            echo "Building Google Benchmark with ${compiler_image}..."
+            mkdir -p "${BENCHMARK_BUILD_DIR}"
+            
+            # Build benchmark library inside Docker container
+            docker run --rm \
+                -v "${PROJECT_ROOT}:/work" \
+                -w "/work/benchmark" \
+                "${compiler_image}" \
+                bash -c "
+                    # Install cmake if not available
+                    if ! command -v cmake &> /dev/null; then
+                        echo 'CMake not found, trying to install...'
+                        apt-get update -qq && apt-get install -y -qq cmake make 2>&1 || \
+                        yum install -y -q cmake make 2>&1 || \
+                        echo 'Warning: Could not install cmake, assuming it exists'
+                    fi
+                    
+                    # Build benchmark
+                    mkdir -p /tmp/benchmark_build
+                    cd /tmp/benchmark_build
+                    cmake /work/benchmark \
+                        -DCMAKE_BUILD_TYPE=Release \
+                        -DBENCHMARK_ENABLE_TESTING=OFF \
+                        -DBENCHMARK_ENABLE_GTEST_TESTS=OFF \
+                        -DCMAKE_CXX_COMPILER=${COMPILER_CMD} 2>&1
+                    make -j\$(nproc) 2>&1
+                    
+                    # Copy built library to cache
+                    mkdir -p /work/isolated_builds/.build/.benchmark_cache/${compiler_name}/src
+                    cp src/libbenchmark.a /work/isolated_builds/.build/.benchmark_cache/${compiler_name}/src/
+                " 2>&1 | grep -E "(Building|Built|Error|error)" || true
+            
+            if [ ! -f "${BENCHMARK_LIB}" ]; then
+                echo "✗ Failed to build Google Benchmark for ${compiler_image}"
+                echo "  Skipping all builds for this compiler"
+                break  # Skip all optimization levels for this compiler
+            fi
+            echo "✓ Google Benchmark built successfully"
+        fi
+        
+        # Build project using container-built benchmark library
+        # Output path must be relative to /work mount in container
+        CONTAINER_OUTPUT="/work/isolated_builds/.build/${PROJECT_NAME}/${compiler_name}_${opt_level}/${PROJECT_NAME}"
+        CONTAINER_BENCHMARK_LIB="/work/isolated_builds/.build/.benchmark_cache/${compiler_name}/src/libbenchmark.a"
+        
         docker run --rm \
             -v "${PROJECT_ROOT}:/work" \
             -w "/work/${PROJECT_NAME}" \
             "${compiler_image}" \
-            ${COMPILER_CMD} -${opt_level} -static main.cpp \
+            ${COMPILER_CMD} -${opt_level} main.cpp \
                 -I../benchmark/include \
-                -L../benchmark/build/src \
-                -lbenchmark -lpthread \
-                -o "${OUTPUT_BIN}" \
+                ${CONTAINER_BENCHMARK_LIB} \
+                -lpthread \
+                -o "${CONTAINER_OUTPUT}" \
             2>&1 | grep -v "warning:" || true
         
         if [ -f "${OUTPUT_BIN}" ]; then
             echo "✓ Built successfully"
-            chmod +x "${OUTPUT_BIN}"
         else
-            echo "✗ Build failed (may be incompatible with static linking)"
+            echo "✗ Build failed"
         fi
         echo ""
     done
