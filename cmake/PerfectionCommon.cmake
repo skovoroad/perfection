@@ -178,12 +178,20 @@ function(perfection_setup_project PROJECT_NAME)
         message(STATUS "Abseil already built at ${ABSEIL_BUILD_DIR}")
     endif()
 
-    # Add Google Benchmark
-    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "Disable benchmark tests")
-    add_subdirectory("${BENCHMARK_SRC_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/benchmark" EXCLUDE_FROM_ALL)
-
     # Add the executable
     add_executable(${PROJECT_NAME} main.cpp)
+
+    # Add Google Benchmark include directories
+    target_include_directories(${PROJECT_NAME} PRIVATE 
+        "${BENCHMARK_SRC_DIR}/include"
+    )
+    
+    # Link against pre-built Google Benchmark library
+    target_link_libraries(${PROJECT_NAME} PRIVATE 
+        "${BENCHMARK_BUILD_DIR}/src/libbenchmark.a"
+        pthread
+        rt
+    )
 
     # Add Boost include directories (header-only)
     # Boost libraries have their headers in libs/*/include
@@ -198,18 +206,12 @@ function(perfection_setup_project PROJECT_NAME)
         "${BOOST_SRC_DIR}/libs/intrusive/include"
     )
 
-
-    # Add Abseil include directories and link libraries
+    # Add Abseil include directories
     target_include_directories(${PROJECT_NAME} PRIVATE "${ABSEIL_SRC_DIR}")
     
-    # Link Google Benchmark
-    target_link_libraries(${PROJECT_NAME} PRIVATE benchmark::benchmark)
-    
-    # Link Abseil libraries (only if they're actually used)
-    # Common Abseil libraries that might be needed
-    if(EXISTS "${ABSEIL_BUILD_DIR}/absl/container/CMakeFiles/inlined_vector.dir")
-        target_link_libraries(${PROJECT_NAME} PRIVATE 
-            "${ABSEIL_BUILD_DIR}/absl/container/libabsl_inlined_vector.a"
-        )
-    endif()
+    # Link Abseil libraries (needed for hash containers)
+    target_link_libraries(${PROJECT_NAME} PRIVATE 
+        "${ABSEIL_BUILD_DIR}/absl/container/libabsl_raw_hash_set.a"
+        "${ABSEIL_BUILD_DIR}/absl/container/libabsl_hashtablez_sampler.a"
+    )
 endfunction()
