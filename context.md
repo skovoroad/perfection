@@ -268,10 +268,55 @@ All builds are centralized in `.build/<project>/<compiler>_<opt_level>/` structu
 
 ========== clang -O1 ==========
 <benchmark results>
+========== clang -O1 ==========
+<benchmark results>
 ...
 ```
 
-### disassembly.sh
+### `generate_all_summaries.sh`
+
+Generates `summary.md` files from `benchmark.log` for easy comparison.
+
+**Features**:
+- Extracts results for all optimization levels (O0, O1, O2, O3)
+- Creates formatted comparison tables
+- **Column order**: clang-O3, gcc-O3, clang-O2, gcc-O2, clang-O1, gcc-O1, clang-O0, gcc-O0
+  - Highest optimization (O3) on the left for quick reference
+  - Lower levels on the right for optional review
+- **Decimal point alignment**: Numbers padded with zeros for visual alignment
+- Auto-detects simple vs hierarchical benchmark names
+
+**Output**: `.benchmarks/<project>/summary.md`
+
+**Table format examples**:
+
+Simple names (exception):
+```markdown
+| Benchmark               |     clang-O3 |       gcc-O3 |     clang-O2 |       gcc-O2 | ... |
+|-------------------------|--------------|--------------|--------------|--------------|-----|
+| BM_process_exception    | 194520176 ns | 171356889 ns | 191656405 ns | 171041887 ns | ... |
+| BM_process_return_code  |   2225705 ns |   1995060 ns |   2095378 ns |   2042145 ns | ... |
+```
+
+Hierarchical names (containers/vector):
+```markdown
+## Copy/Small_int
+
+| Container     | clang-O3 |   gcc-O3 | clang-O2 |   gcc-O2 | ... |
+|---------------|----------|----------|----------|----------|-----|
+| BoostVector   | 14.5  ns | 16.5  ns | 14.6  ns | 16.5 ns  | ... |
+| StaticVector  |  1.72 ns |  1.32 ns |  1.73 ns |  1.33 ns | ... |
+```
+
+**Usage**:
+```bash
+./generate_all_summaries.sh              # All projects
+python3 generate_summary.py <log_path>   # Single project
+```
+
+**Implementation**: Python script (`generate_summary.py`) parses `benchmark.log`, groups results, and generates markdown with proper formatting and alignment.
+
+### `disassembly.sh <project>`
 
 **Purpose**: Generate disassembly for analysis across all configurations
 

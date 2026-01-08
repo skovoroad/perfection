@@ -94,11 +94,17 @@ perfection_setup_project(my_project)
 
 ### Organized Results
 - Benchmarks: `.benchmarks/<project>/benchmark.log`
+  - Raw benchmark output across all compilers/optimization levels
+- Summaries: `.benchmarks/<project>/summary.md`
+  - Formatted comparison tables (automatically generated)
+  - Columns: clang-O3, gcc-O3, clang-O2, gcc-O2, clang-O1, gcc-O1, clang-O0, gcc-O0
+  - Decimal point alignment for easy comparison
 - Disassembly: `.disassembly/<project>/<compiler>_<opt>.dis`
 
 ### Automation Scripts
 - `benchmarks.sh <project>` - Run all configurations (2 compilers × 4 opt levels)
 - `disassembly.sh <project>` - Generate disassembly for all configurations
+- `generate_all_summaries.sh` - Generate summary.md for all projects
 - `run_all.sh` - Process all projects at once
 
 ## Adding a New Project
