@@ -100,7 +100,7 @@ for compiler_image in "${COMPILERS[@]}"; do
             # Build benchmark library inside Docker container
             docker run --rm \
                 -v "${PROJECT_ROOT}:/work" \
-                -w "/work/benchmark" \
+                -w "/work/3rdparty/src/benchmark" \
                 "${compiler_image}" \
                 bash -c "
                     # Install cmake if not available
@@ -114,7 +114,7 @@ for compiler_image in "${COMPILERS[@]}"; do
                     # Build benchmark
                     mkdir -p /tmp/benchmark_build
                     cd /tmp/benchmark_build
-                    cmake /work/benchmark \
+                    cmake /work/3rdparty/src/benchmark \
                         -DCMAKE_BUILD_TYPE=Release \
                         -DBENCHMARK_ENABLE_TESTING=OFF \
                         -DBENCHMARK_ENABLE_GTEST_TESTS=OFF \
@@ -144,7 +144,7 @@ for compiler_image in "${COMPILERS[@]}"; do
             -w "/work/${PROJECT_NAME}" \
             "${compiler_image}" \
             ${COMPILER_CMD} -${opt_level} main.cpp \
-                -I../benchmark/include \
+                -I../3rdparty/src/benchmark/include \
                 ${CONTAINER_BENCHMARK_LIB} \
                 -lpthread \
                 -o "${CONTAINER_OUTPUT}" \
