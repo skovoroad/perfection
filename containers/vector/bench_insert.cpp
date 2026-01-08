@@ -16,7 +16,7 @@
 // =============================================================================
 
 template<typename Container, typename Element>
-static void BM_Insert_Small(benchmark::State& state) {
+static void BM_Insert_SmallVector(benchmark::State& state) {
     for (auto _ : state) {
         Container vec;
         for (int i = 0; i < 8; ++i) {
@@ -28,7 +28,7 @@ static void BM_Insert_Small(benchmark::State& state) {
 }
 
 template<typename Container, typename Element>
-static void BM_Insert_Medium(benchmark::State& state) {
+static void BM_Insert_MediumVector(benchmark::State& state) {
     for (auto _ : state) {
         Container vec;
         for (int i = 0; i < 64; ++i) {
@@ -40,7 +40,7 @@ static void BM_Insert_Medium(benchmark::State& state) {
 }
 
 template<typename Container, typename Element>
-static void BM_Insert_Large(benchmark::State& state) {
+static void BM_Insert_LargeVector(benchmark::State& state) {
     for (auto _ : state) {
         Container vec;
         for (int i = 0; i < 1024; ++i) {
@@ -56,7 +56,7 @@ static void BM_Insert_Large(benchmark::State& state) {
 // =============================================================================
 
 template<typename Container, typename Element>
-static void BM_Insert_Small_Reserved(benchmark::State& state) {
+static void BM_Insert_SmallVector_Reserved(benchmark::State& state) {
     for (auto _ : state) {
         Container vec;
         vec.reserve(8);
@@ -69,7 +69,7 @@ static void BM_Insert_Small_Reserved(benchmark::State& state) {
 }
 
 template<typename Container, typename Element>
-static void BM_Insert_Medium_Reserved(benchmark::State& state) {
+static void BM_Insert_MediumVector_Reserved(benchmark::State& state) {
     for (auto _ : state) {
         Container vec;
         vec.reserve(64);
@@ -82,7 +82,7 @@ static void BM_Insert_Medium_Reserved(benchmark::State& state) {
 }
 
 template<typename Container, typename Element>
-static void BM_Insert_Large_Reserved(benchmark::State& state) {
+static void BM_Insert_LargeVector_Reserved(benchmark::State& state) {
     for (auto _ : state) {
         Container vec;
         vec.reserve(1024);
@@ -95,138 +95,138 @@ static void BM_Insert_Large_Reserved(benchmark::State& state) {
 }
 
 // =============================================================================
-// Small + SmallElement (int)
+// SmallVector + SmallItem
 // =============================================================================
 
-BENCHMARK(BM_Insert_Small<std::vector<SmallElement>, SmallElement>)->Name("Insert/Small_int/StdVector");
-BENCHMARK(BM_Insert_Small<boost::container::vector<SmallElement>, SmallElement>)->Name("Insert/Small_int/BoostVector");
-BENCHMARK(BM_Insert_Small<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Insert/Small_int/SmallVector");
-BENCHMARK(BM_Insert_Small<boost::container::static_vector<SmallElement, 8>, SmallElement>)->Name("Insert/Small_int/StaticVector");
-BENCHMARK(BM_Insert_Small<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Insert/Small_int/InlinedVector");
+BENCHMARK(BM_Insert_SmallVector<std::vector<SmallItem>, SmallItem>)->Name("Insert/SmallVector_SmallItem/StdVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Insert/SmallVector_SmallItem/BoostVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Insert/SmallVector_SmallItem/SmallVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::static_vector<SmallItem, 8>, SmallItem>)->Name("Insert/SmallVector_SmallItem/StaticVector");
+BENCHMARK(BM_Insert_SmallVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Insert/SmallVector_SmallItem/InlinedVector");
 
-BENCHMARK(BM_Insert_Small_Reserved<std::vector<SmallElement>, SmallElement>)->Name("Insert/Small_int/StdVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<boost::container::vector<SmallElement>, SmallElement>)->Name("Insert/Small_int/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Insert/Small_int/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Insert/Small_int/InlinedVector_Reserved");
-
-// =============================================================================
-// Small + Point
-// =============================================================================
-
-BENCHMARK(BM_Insert_Small<std::vector<Point>, Point>)->Name("Insert/Small_Point/StdVector");
-BENCHMARK(BM_Insert_Small<boost::container::vector<Point>, Point>)->Name("Insert/Small_Point/BoostVector");
-BENCHMARK(BM_Insert_Small<boost::container::small_vector<Point, 8>, Point>)->Name("Insert/Small_Point/SmallVector");
-BENCHMARK(BM_Insert_Small<boost::container::static_vector<Point, 8>, Point>)->Name("Insert/Small_Point/StaticVector");
-BENCHMARK(BM_Insert_Small<absl::InlinedVector<Point, 8>, Point>)->Name("Insert/Small_Point/InlinedVector");
-
-BENCHMARK(BM_Insert_Small_Reserved<std::vector<Point>, Point>)->Name("Insert/Small_Point/StdVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<boost::container::vector<Point>, Point>)->Name("Insert/Small_Point/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<boost::container::small_vector<Point, 8>, Point>)->Name("Insert/Small_Point/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<absl::InlinedVector<Point, 8>, Point>)->Name("Insert/Small_Point/InlinedVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<std::vector<SmallItem>, SmallItem>)->Name("Insert/SmallVector_SmallItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<boost::container::vector<SmallItem>, SmallItem>)->Name("Insert/SmallVector_SmallItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Insert/SmallVector_SmallItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Insert/SmallVector_SmallItem/InlinedVector_Reserved");
 
 // =============================================================================
-// Small + LargeStruct
+// SmallVector + MediumItem
 // =============================================================================
 
-BENCHMARK(BM_Insert_Small<std::vector<LargeStruct>, LargeStruct>)->Name("Insert/Small_LargeStruct/StdVector");
-BENCHMARK(BM_Insert_Small<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Insert/Small_LargeStruct/BoostVector");
-BENCHMARK(BM_Insert_Small<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Small_LargeStruct/SmallVector");
-BENCHMARK(BM_Insert_Small<boost::container::static_vector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Small_LargeStruct/StaticVector");
-BENCHMARK(BM_Insert_Small<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Small_LargeStruct/InlinedVector");
+BENCHMARK(BM_Insert_SmallVector<std::vector<MediumItem>, MediumItem>)->Name("Insert/SmallVector_MediumItem/StdVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::vector<MediumItem>, MediumItem>)->Name("Insert/SmallVector_MediumItem/BoostVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Insert/SmallVector_MediumItem/SmallVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::static_vector<MediumItem, 8>, MediumItem>)->Name("Insert/SmallVector_MediumItem/StaticVector");
+BENCHMARK(BM_Insert_SmallVector<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Insert/SmallVector_MediumItem/InlinedVector");
 
-BENCHMARK(BM_Insert_Small_Reserved<std::vector<LargeStruct>, LargeStruct>)->Name("Insert/Small_LargeStruct/StdVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Insert/Small_LargeStruct/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Small_LargeStruct/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Small_Reserved<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Small_LargeStruct/InlinedVector_Reserved");
-
-// =============================================================================
-// Medium + SmallElement (int)
-// =============================================================================
-
-BENCHMARK(BM_Insert_Medium<std::vector<SmallElement>, SmallElement>)->Name("Insert/Medium_int/StdVector");
-BENCHMARK(BM_Insert_Medium<boost::container::vector<SmallElement>, SmallElement>)->Name("Insert/Medium_int/BoostVector");
-BENCHMARK(BM_Insert_Medium<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Insert/Medium_int/SmallVector");
-BENCHMARK(BM_Insert_Medium<boost::container::static_vector<SmallElement, 64>, SmallElement>)->Name("Insert/Medium_int/StaticVector");
-BENCHMARK(BM_Insert_Medium<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Insert/Medium_int/InlinedVector");
-
-BENCHMARK(BM_Insert_Medium_Reserved<std::vector<SmallElement>, SmallElement>)->Name("Insert/Medium_int/StdVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<boost::container::vector<SmallElement>, SmallElement>)->Name("Insert/Medium_int/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Insert/Medium_int/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Insert/Medium_int/InlinedVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<std::vector<MediumItem>, MediumItem>)->Name("Insert/SmallVector_MediumItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<boost::container::vector<MediumItem>, MediumItem>)->Name("Insert/SmallVector_MediumItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Insert/SmallVector_MediumItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Insert/SmallVector_MediumItem/InlinedVector_Reserved");
 
 // =============================================================================
-// Medium + Point
+// SmallVector + LargeItem
 // =============================================================================
 
-BENCHMARK(BM_Insert_Medium<std::vector<Point>, Point>)->Name("Insert/Medium_Point/StdVector");
-BENCHMARK(BM_Insert_Medium<boost::container::vector<Point>, Point>)->Name("Insert/Medium_Point/BoostVector");
-BENCHMARK(BM_Insert_Medium<boost::container::small_vector<Point, 8>, Point>)->Name("Insert/Medium_Point/SmallVector");
-BENCHMARK(BM_Insert_Medium<boost::container::static_vector<Point, 64>, Point>)->Name("Insert/Medium_Point/StaticVector");
-BENCHMARK(BM_Insert_Medium<absl::InlinedVector<Point, 8>, Point>)->Name("Insert/Medium_Point/InlinedVector");
+BENCHMARK(BM_Insert_SmallVector<std::vector<LargeItem>, LargeItem>)->Name("Insert/SmallVector_LargeItem/StdVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::vector<LargeItem>, LargeItem>)->Name("Insert/SmallVector_LargeItem/BoostVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Insert/SmallVector_LargeItem/SmallVector");
+BENCHMARK(BM_Insert_SmallVector<boost::container::static_vector<LargeItem, 8>, LargeItem>)->Name("Insert/SmallVector_LargeItem/StaticVector");
+BENCHMARK(BM_Insert_SmallVector<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Insert/SmallVector_LargeItem/InlinedVector");
 
-BENCHMARK(BM_Insert_Medium_Reserved<std::vector<Point>, Point>)->Name("Insert/Medium_Point/StdVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<boost::container::vector<Point>, Point>)->Name("Insert/Medium_Point/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<boost::container::small_vector<Point, 8>, Point>)->Name("Insert/Medium_Point/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<absl::InlinedVector<Point, 8>, Point>)->Name("Insert/Medium_Point/InlinedVector_Reserved");
-
-// =============================================================================
-// Medium + LargeStruct
-// =============================================================================
-
-BENCHMARK(BM_Insert_Medium<std::vector<LargeStruct>, LargeStruct>)->Name("Insert/Medium_LargeStruct/StdVector");
-BENCHMARK(BM_Insert_Medium<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Insert/Medium_LargeStruct/BoostVector");
-BENCHMARK(BM_Insert_Medium<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Medium_LargeStruct/SmallVector");
-BENCHMARK(BM_Insert_Medium<boost::container::static_vector<LargeStruct, 64>, LargeStruct>)->Name("Insert/Medium_LargeStruct/StaticVector");
-BENCHMARK(BM_Insert_Medium<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Medium_LargeStruct/InlinedVector");
-
-BENCHMARK(BM_Insert_Medium_Reserved<std::vector<LargeStruct>, LargeStruct>)->Name("Insert/Medium_LargeStruct/StdVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Insert/Medium_LargeStruct/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Medium_LargeStruct/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Medium_Reserved<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Medium_LargeStruct/InlinedVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<std::vector<LargeItem>, LargeItem>)->Name("Insert/SmallVector_LargeItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<boost::container::vector<LargeItem>, LargeItem>)->Name("Insert/SmallVector_LargeItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Insert/SmallVector_LargeItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_SmallVector_Reserved<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Insert/SmallVector_LargeItem/InlinedVector_Reserved");
 
 // =============================================================================
-// Large + SmallElement (int)
+// MediumVector + SmallItem
 // =============================================================================
 
-BENCHMARK(BM_Insert_Large<std::vector<SmallElement>, SmallElement>)->Name("Insert/Large_int/StdVector");
-BENCHMARK(BM_Insert_Large<boost::container::vector<SmallElement>, SmallElement>)->Name("Insert/Large_int/BoostVector");
-BENCHMARK(BM_Insert_Large<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Insert/Large_int/SmallVector");
-BENCHMARK(BM_Insert_Large<boost::container::static_vector<SmallElement, 1024>, SmallElement>)->Name("Insert/Large_int/StaticVector");
-BENCHMARK(BM_Insert_Large<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Insert/Large_int/InlinedVector");
+BENCHMARK(BM_Insert_MediumVector<std::vector<SmallItem>, SmallItem>)->Name("Insert/MediumVector_SmallItem/StdVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Insert/MediumVector_SmallItem/BoostVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Insert/MediumVector_SmallItem/SmallVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::static_vector<SmallItem, 64>, SmallItem>)->Name("Insert/MediumVector_SmallItem/StaticVector");
+BENCHMARK(BM_Insert_MediumVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Insert/MediumVector_SmallItem/InlinedVector");
 
-BENCHMARK(BM_Insert_Large_Reserved<std::vector<SmallElement>, SmallElement>)->Name("Insert/Large_int/StdVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<boost::container::vector<SmallElement>, SmallElement>)->Name("Insert/Large_int/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Insert/Large_int/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Insert/Large_int/InlinedVector_Reserved");
-
-// =============================================================================
-// Large + Point
-// =============================================================================
-
-BENCHMARK(BM_Insert_Large<std::vector<Point>, Point>)->Name("Insert/Large_Point/StdVector");
-BENCHMARK(BM_Insert_Large<boost::container::vector<Point>, Point>)->Name("Insert/Large_Point/BoostVector");
-BENCHMARK(BM_Insert_Large<boost::container::small_vector<Point, 8>, Point>)->Name("Insert/Large_Point/SmallVector");
-BENCHMARK(BM_Insert_Large<boost::container::static_vector<Point, 1024>, Point>)->Name("Insert/Large_Point/StaticVector");
-BENCHMARK(BM_Insert_Large<absl::InlinedVector<Point, 8>, Point>)->Name("Insert/Large_Point/InlinedVector");
-
-BENCHMARK(BM_Insert_Large_Reserved<std::vector<Point>, Point>)->Name("Insert/Large_Point/StdVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<boost::container::vector<Point>, Point>)->Name("Insert/Large_Point/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<boost::container::small_vector<Point, 8>, Point>)->Name("Insert/Large_Point/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<absl::InlinedVector<Point, 8>, Point>)->Name("Insert/Large_Point/InlinedVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<std::vector<SmallItem>, SmallItem>)->Name("Insert/MediumVector_SmallItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<boost::container::vector<SmallItem>, SmallItem>)->Name("Insert/MediumVector_SmallItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Insert/MediumVector_SmallItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Insert/MediumVector_SmallItem/InlinedVector_Reserved");
 
 // =============================================================================
-// Large + LargeStruct
+// MediumVector + MediumItem
 // =============================================================================
 
-BENCHMARK(BM_Insert_Large<std::vector<LargeStruct>, LargeStruct>)->Name("Insert/Large_LargeStruct/StdVector");
-BENCHMARK(BM_Insert_Large<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Insert/Large_LargeStruct/BoostVector");
-BENCHMARK(BM_Insert_Large<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Large_LargeStruct/SmallVector");
-BENCHMARK(BM_Insert_Large<boost::container::static_vector<LargeStruct, 1024>, LargeStruct>)->Name("Insert/Large_LargeStruct/StaticVector");
-BENCHMARK(BM_Insert_Large<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Large_LargeStruct/InlinedVector");
+BENCHMARK(BM_Insert_MediumVector<std::vector<MediumItem>, MediumItem>)->Name("Insert/MediumVector_MediumItem/StdVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::vector<MediumItem>, MediumItem>)->Name("Insert/MediumVector_MediumItem/BoostVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Insert/MediumVector_MediumItem/SmallVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::static_vector<MediumItem, 64>, MediumItem>)->Name("Insert/MediumVector_MediumItem/StaticVector");
+BENCHMARK(BM_Insert_MediumVector<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Insert/MediumVector_MediumItem/InlinedVector");
 
-BENCHMARK(BM_Insert_Large_Reserved<std::vector<LargeStruct>, LargeStruct>)->Name("Insert/Large_LargeStruct/StdVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Insert/Large_LargeStruct/BoostVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Large_LargeStruct/SmallVector_Reserved");
-BENCHMARK(BM_Insert_Large_Reserved<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Insert/Large_LargeStruct/InlinedVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<std::vector<MediumItem>, MediumItem>)->Name("Insert/MediumVector_MediumItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<boost::container::vector<MediumItem>, MediumItem>)->Name("Insert/MediumVector_MediumItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Insert/MediumVector_MediumItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Insert/MediumVector_MediumItem/InlinedVector_Reserved");
+
+// =============================================================================
+// MediumVector + LargeItem
+// =============================================================================
+
+BENCHMARK(BM_Insert_MediumVector<std::vector<LargeItem>, LargeItem>)->Name("Insert/MediumVector_LargeItem/StdVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::vector<LargeItem>, LargeItem>)->Name("Insert/MediumVector_LargeItem/BoostVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Insert/MediumVector_LargeItem/SmallVector");
+BENCHMARK(BM_Insert_MediumVector<boost::container::static_vector<LargeItem, 64>, LargeItem>)->Name("Insert/MediumVector_LargeItem/StaticVector");
+BENCHMARK(BM_Insert_MediumVector<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Insert/MediumVector_LargeItem/InlinedVector");
+
+BENCHMARK(BM_Insert_MediumVector_Reserved<std::vector<LargeItem>, LargeItem>)->Name("Insert/MediumVector_LargeItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<boost::container::vector<LargeItem>, LargeItem>)->Name("Insert/MediumVector_LargeItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Insert/MediumVector_LargeItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_MediumVector_Reserved<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Insert/MediumVector_LargeItem/InlinedVector_Reserved");
+
+// =============================================================================
+// LargeVector + SmallItem
+// =============================================================================
+
+BENCHMARK(BM_Insert_LargeVector<std::vector<SmallItem>, SmallItem>)->Name("Insert/LargeVector_SmallItem/StdVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Insert/LargeVector_SmallItem/BoostVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Insert/LargeVector_SmallItem/SmallVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::static_vector<SmallItem, 1024>, SmallItem>)->Name("Insert/LargeVector_SmallItem/StaticVector");
+BENCHMARK(BM_Insert_LargeVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Insert/LargeVector_SmallItem/InlinedVector");
+
+BENCHMARK(BM_Insert_LargeVector_Reserved<std::vector<SmallItem>, SmallItem>)->Name("Insert/LargeVector_SmallItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<boost::container::vector<SmallItem>, SmallItem>)->Name("Insert/LargeVector_SmallItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Insert/LargeVector_SmallItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Insert/LargeVector_SmallItem/InlinedVector_Reserved");
+
+// =============================================================================
+// LargeVector + MediumItem
+// =============================================================================
+
+BENCHMARK(BM_Insert_LargeVector<std::vector<MediumItem>, MediumItem>)->Name("Insert/LargeVector_MediumItem/StdVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::vector<MediumItem>, MediumItem>)->Name("Insert/LargeVector_MediumItem/BoostVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Insert/LargeVector_MediumItem/SmallVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::static_vector<MediumItem, 1024>, MediumItem>)->Name("Insert/LargeVector_MediumItem/StaticVector");
+BENCHMARK(BM_Insert_LargeVector<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Insert/LargeVector_MediumItem/InlinedVector");
+
+BENCHMARK(BM_Insert_LargeVector_Reserved<std::vector<MediumItem>, MediumItem>)->Name("Insert/LargeVector_MediumItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<boost::container::vector<MediumItem>, MediumItem>)->Name("Insert/LargeVector_MediumItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Insert/LargeVector_MediumItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Insert/LargeVector_MediumItem/InlinedVector_Reserved");
+
+// =============================================================================
+// LargeVector + LargeItem
+// =============================================================================
+
+BENCHMARK(BM_Insert_LargeVector<std::vector<LargeItem>, LargeItem>)->Name("Insert/LargeVector_LargeItem/StdVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::vector<LargeItem>, LargeItem>)->Name("Insert/LargeVector_LargeItem/BoostVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Insert/LargeVector_LargeItem/SmallVector");
+BENCHMARK(BM_Insert_LargeVector<boost::container::static_vector<LargeItem, 1024>, LargeItem>)->Name("Insert/LargeVector_LargeItem/StaticVector");
+BENCHMARK(BM_Insert_LargeVector<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Insert/LargeVector_LargeItem/InlinedVector");
+
+BENCHMARK(BM_Insert_LargeVector_Reserved<std::vector<LargeItem>, LargeItem>)->Name("Insert/LargeVector_LargeItem/StdVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<boost::container::vector<LargeItem>, LargeItem>)->Name("Insert/LargeVector_LargeItem/BoostVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Insert/LargeVector_LargeItem/SmallVector_Reserved");
+BENCHMARK(BM_Insert_LargeVector_Reserved<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Insert/LargeVector_LargeItem/InlinedVector_Reserved");
 
 BENCHMARK_MAIN();

@@ -6,19 +6,19 @@
 // Common Data Structures for Container Benchmarks
 // =============================================================================
 
-// Small element: 4 bytes
-using SmallElement = int;
+// Small item: 4 bytes
+using SmallItem = int;
 
-// Medium element: 24 bytes
-struct Point {
+// Medium item: 24 bytes
+struct MediumItem {
     double x, y, z;
-    Point() : x(0), y(0), z(0) {}
-    explicit Point(int val) : x(val), y(val), z(val) {}
+    MediumItem() : x(0), y(0), z(0) {}
+    explicit MediumItem(int val) : x(val), y(val), z(val) {}
 };
 
-// Large element: 256 bytes
-struct LargeStruct {
+// Large item: 256 bytes
+struct LargeItem {
     std::array<int, 64> data;
-    LargeStruct() { data.fill(0); }
-    explicit LargeStruct(int val) { data.fill(val); }
+    LargeItem() { data.fill(0); }
+    explicit LargeItem(int val) { data.fill(val); }
 };

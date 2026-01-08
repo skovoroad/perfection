@@ -16,7 +16,7 @@
 // =============================================================================
 
 template<typename Container, typename Element>
-static void BM_Copy_Small(benchmark::State& state) {
+static void BM_Copy_SmallVector(benchmark::State& state) {
     Container original;
     for (int i = 0; i < 8; ++i) {
         original.push_back(Element(i));
@@ -30,41 +30,41 @@ static void BM_Copy_Small(benchmark::State& state) {
 }
 
 // =============================================================================
-// Small + SmallElement (int)
+// SmallVector + SmallItem
 // =============================================================================
 
-BENCHMARK(BM_Copy_Small<std::vector<SmallElement>, SmallElement>)->Name("Copy/Small_int/StdVector");
-BENCHMARK(BM_Copy_Small<boost::container::vector<SmallElement>, SmallElement>)->Name("Copy/Small_int/BoostVector");
-BENCHMARK(BM_Copy_Small<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Copy/Small_int/SmallVector");
-BENCHMARK(BM_Copy_Small<boost::container::static_vector<SmallElement, 8>, SmallElement>)->Name("Copy/Small_int/StaticVector");
-BENCHMARK(BM_Copy_Small<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Copy/Small_int/InlinedVector");
+BENCHMARK(BM_Copy_SmallVector<std::vector<SmallItem>, SmallItem>)->Name("Copy/SmallVector_SmallItem/StdVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Copy/SmallVector_SmallItem/BoostVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Copy/SmallVector_SmallItem/SmallVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::static_vector<SmallItem, 8>, SmallItem>)->Name("Copy/SmallVector_SmallItem/StaticVector");
+BENCHMARK(BM_Copy_SmallVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Copy/SmallVector_SmallItem/InlinedVector");
 
 // =============================================================================
-// Small + Point
+// SmallVector + MediumItem
 // =============================================================================
 
-BENCHMARK(BM_Copy_Small<std::vector<Point>, Point>)->Name("Copy/Small_Point/StdVector");
-BENCHMARK(BM_Copy_Small<boost::container::vector<Point>, Point>)->Name("Copy/Small_Point/BoostVector");
-BENCHMARK(BM_Copy_Small<boost::container::small_vector<Point, 8>, Point>)->Name("Copy/Small_Point/SmallVector");
-BENCHMARK(BM_Copy_Small<boost::container::static_vector<Point, 8>, Point>)->Name("Copy/Small_Point/StaticVector");
-BENCHMARK(BM_Copy_Small<absl::InlinedVector<Point, 8>, Point>)->Name("Copy/Small_Point/InlinedVector");
+BENCHMARK(BM_Copy_SmallVector<std::vector<MediumItem>, MediumItem>)->Name("Copy/SmallVector_MediumItem/StdVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::vector<MediumItem>, MediumItem>)->Name("Copy/SmallVector_MediumItem/BoostVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Copy/SmallVector_MediumItem/SmallVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::static_vector<MediumItem, 8>, MediumItem>)->Name("Copy/SmallVector_MediumItem/StaticVector");
+BENCHMARK(BM_Copy_SmallVector<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Copy/SmallVector_MediumItem/InlinedVector");
 
 // =============================================================================
-// Small + LargeStruct
+// SmallVector + LargeItem
 // =============================================================================
 
-BENCHMARK(BM_Copy_Small<std::vector<LargeStruct>, LargeStruct>)->Name("Copy/Small_LargeStruct/StdVector");
-BENCHMARK(BM_Copy_Small<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Copy/Small_LargeStruct/BoostVector");
-BENCHMARK(BM_Copy_Small<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Copy/Small_LargeStruct/SmallVector");
-BENCHMARK(BM_Copy_Small<boost::container::static_vector<LargeStruct, 8>, LargeStruct>)->Name("Copy/Small_LargeStruct/StaticVector");
-BENCHMARK(BM_Copy_Small<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Copy/Small_LargeStruct/InlinedVector");
+BENCHMARK(BM_Copy_SmallVector<std::vector<LargeItem>, LargeItem>)->Name("Copy/SmallVector_LargeItem/StdVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::vector<LargeItem>, LargeItem>)->Name("Copy/SmallVector_LargeItem/BoostVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Copy/SmallVector_LargeItem/SmallVector");
+BENCHMARK(BM_Copy_SmallVector<boost::container::static_vector<LargeItem, 8>, LargeItem>)->Name("Copy/SmallVector_LargeItem/StaticVector");
+BENCHMARK(BM_Copy_SmallVector<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Copy/SmallVector_LargeItem/InlinedVector");
 
 // =============================================================================
-// Medium copy (64 elements)
+// MediumVector copy (64 elements)
 // =============================================================================
 
 template<typename Container, typename Element>
-static void BM_Copy_Medium(benchmark::State& state) {
+static void BM_Copy_MediumVector(benchmark::State& state) {
     Container original;
     for (int i = 0; i < 64; ++i) {
         original.push_back(Element(i));
@@ -77,30 +77,30 @@ static void BM_Copy_Medium(benchmark::State& state) {
     }
 }
 
-BENCHMARK(BM_Copy_Medium<std::vector<SmallElement>, SmallElement>)->Name("Copy/Medium_int/StdVector");
-BENCHMARK(BM_Copy_Medium<boost::container::vector<SmallElement>, SmallElement>)->Name("Copy/Medium_int/BoostVector");
-BENCHMARK(BM_Copy_Medium<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Copy/Medium_int/SmallVector");
-BENCHMARK(BM_Copy_Medium<boost::container::static_vector<SmallElement, 64>, SmallElement>)->Name("Copy/Medium_int/StaticVector");
-BENCHMARK(BM_Copy_Medium<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Copy/Medium_int/InlinedVector");
+BENCHMARK(BM_Copy_MediumVector<std::vector<SmallItem>, SmallItem>)->Name("Copy/MediumVector_SmallItem/StdVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Copy/MediumVector_SmallItem/BoostVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Copy/MediumVector_SmallItem/SmallVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::static_vector<SmallItem, 64>, SmallItem>)->Name("Copy/MediumVector_SmallItem/StaticVector");
+BENCHMARK(BM_Copy_MediumVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Copy/MediumVector_SmallItem/InlinedVector");
 
-BENCHMARK(BM_Copy_Medium<std::vector<Point>, Point>)->Name("Copy/Medium_Point/StdVector");
-BENCHMARK(BM_Copy_Medium<boost::container::vector<Point>, Point>)->Name("Copy/Medium_Point/BoostVector");
-BENCHMARK(BM_Copy_Medium<boost::container::small_vector<Point, 8>, Point>)->Name("Copy/Medium_Point/SmallVector");
-BENCHMARK(BM_Copy_Medium<boost::container::static_vector<Point, 64>, Point>)->Name("Copy/Medium_Point/StaticVector");
-BENCHMARK(BM_Copy_Medium<absl::InlinedVector<Point, 8>, Point>)->Name("Copy/Medium_Point/InlinedVector");
+BENCHMARK(BM_Copy_MediumVector<std::vector<MediumItem>, MediumItem>)->Name("Copy/MediumVector_MediumItem/StdVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::vector<MediumItem>, MediumItem>)->Name("Copy/MediumVector_MediumItem/BoostVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Copy/MediumVector_MediumItem/SmallVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::static_vector<MediumItem, 64>, MediumItem>)->Name("Copy/MediumVector_MediumItem/StaticVector");
+BENCHMARK(BM_Copy_MediumVector<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Copy/MediumVector_MediumItem/InlinedVector");
 
-BENCHMARK(BM_Copy_Medium<std::vector<LargeStruct>, LargeStruct>)->Name("Copy/Medium_LargeStruct/StdVector");
-BENCHMARK(BM_Copy_Medium<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Copy/Medium_LargeStruct/BoostVector");
-BENCHMARK(BM_Copy_Medium<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Copy/Medium_LargeStruct/SmallVector");
-BENCHMARK(BM_Copy_Medium<boost::container::static_vector<LargeStruct, 64>, LargeStruct>)->Name("Copy/Medium_LargeStruct/StaticVector");
-BENCHMARK(BM_Copy_Medium<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Copy/Medium_LargeStruct/InlinedVector");
+BENCHMARK(BM_Copy_MediumVector<std::vector<LargeItem>, LargeItem>)->Name("Copy/MediumVector_LargeItem/StdVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::vector<LargeItem>, LargeItem>)->Name("Copy/MediumVector_LargeItem/BoostVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Copy/MediumVector_LargeItem/SmallVector");
+BENCHMARK(BM_Copy_MediumVector<boost::container::static_vector<LargeItem, 64>, LargeItem>)->Name("Copy/MediumVector_LargeItem/StaticVector");
+BENCHMARK(BM_Copy_MediumVector<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Copy/MediumVector_LargeItem/InlinedVector");
 
 // =============================================================================
-// Large copy (1024 elements)
+// LargeVector copy (1024 elements)
 // =============================================================================
 
 template<typename Container, typename Element>
-static void BM_Copy_Large(benchmark::State& state) {
+static void BM_Copy_LargeVector(benchmark::State& state) {
     Container original;
     for (int i = 0; i < 1024; ++i) {
         original.push_back(Element(i));
@@ -113,22 +113,22 @@ static void BM_Copy_Large(benchmark::State& state) {
     }
 }
 
-BENCHMARK(BM_Copy_Large<std::vector<SmallElement>, SmallElement>)->Name("Copy/Large_int/StdVector");
-BENCHMARK(BM_Copy_Large<boost::container::vector<SmallElement>, SmallElement>)->Name("Copy/Large_int/BoostVector");
-BENCHMARK(BM_Copy_Large<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Copy/Large_int/SmallVector");
-BENCHMARK(BM_Copy_Large<boost::container::static_vector<SmallElement, 1024>, SmallElement>)->Name("Copy/Large_int/StaticVector");
-BENCHMARK(BM_Copy_Large<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Copy/Large_int/InlinedVector");
+BENCHMARK(BM_Copy_LargeVector<std::vector<SmallItem>, SmallItem>)->Name("Copy/LargeVector_SmallItem/StdVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Copy/LargeVector_SmallItem/BoostVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Copy/LargeVector_SmallItem/SmallVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::static_vector<SmallItem, 1024>, SmallItem>)->Name("Copy/LargeVector_SmallItem/StaticVector");
+BENCHMARK(BM_Copy_LargeVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Copy/LargeVector_SmallItem/InlinedVector");
 
-BENCHMARK(BM_Copy_Large<std::vector<Point>, Point>)->Name("Copy/Large_Point/StdVector");
-BENCHMARK(BM_Copy_Large<boost::container::vector<Point>, Point>)->Name("Copy/Large_Point/BoostVector");
-BENCHMARK(BM_Copy_Large<boost::container::small_vector<Point, 8>, Point>)->Name("Copy/Large_Point/SmallVector");
-BENCHMARK(BM_Copy_Large<boost::container::static_vector<Point, 1024>, Point>)->Name("Copy/Large_Point/StaticVector");
-BENCHMARK(BM_Copy_Large<absl::InlinedVector<Point, 8>, Point>)->Name("Copy/Large_Point/InlinedVector");
+BENCHMARK(BM_Copy_LargeVector<std::vector<MediumItem>, MediumItem>)->Name("Copy/LargeVector_MediumItem/StdVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::vector<MediumItem>, MediumItem>)->Name("Copy/LargeVector_MediumItem/BoostVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Copy/LargeVector_MediumItem/SmallVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::static_vector<MediumItem, 1024>, MediumItem>)->Name("Copy/LargeVector_MediumItem/StaticVector");
+BENCHMARK(BM_Copy_LargeVector<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Copy/LargeVector_MediumItem/InlinedVector");
 
-BENCHMARK(BM_Copy_Large<std::vector<LargeStruct>, LargeStruct>)->Name("Copy/Large_LargeStruct/StdVector");
-BENCHMARK(BM_Copy_Large<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Copy/Large_LargeStruct/BoostVector");
-BENCHMARK(BM_Copy_Large<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Copy/Large_LargeStruct/SmallVector");
-BENCHMARK(BM_Copy_Large<boost::container::static_vector<LargeStruct, 1024>, LargeStruct>)->Name("Copy/Large_LargeStruct/StaticVector");
-BENCHMARK(BM_Copy_Large<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Copy/Large_LargeStruct/InlinedVector");
+BENCHMARK(BM_Copy_LargeVector<std::vector<LargeItem>, LargeItem>)->Name("Copy/LargeVector_LargeItem/StdVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::vector<LargeItem>, LargeItem>)->Name("Copy/LargeVector_LargeItem/BoostVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Copy/LargeVector_LargeItem/SmallVector");
+BENCHMARK(BM_Copy_LargeVector<boost::container::static_vector<LargeItem, 1024>, LargeItem>)->Name("Copy/LargeVector_LargeItem/StaticVector");
+BENCHMARK(BM_Copy_LargeVector<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Copy/LargeVector_LargeItem/InlinedVector");
 
 BENCHMARK_MAIN();

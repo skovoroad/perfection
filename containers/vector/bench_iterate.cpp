@@ -16,7 +16,7 @@
 // =============================================================================
 
 template<typename Container, typename Element>
-static void BM_Iterate_Small(benchmark::State& state) {
+static void BM_Iterate_SmallVector(benchmark::State& state) {
     Container vec;
     for (int i = 0; i < 8; ++i) {
         vec.push_back(Element(i));
@@ -33,21 +33,21 @@ static void BM_Iterate_Small(benchmark::State& state) {
 }
 
 // =============================================================================
-// Small + SmallElement (int)
+// SmallVector + SmallItem
 // =============================================================================
 
-BENCHMARK(BM_Iterate_Small<std::vector<SmallElement>, SmallElement>)->Name("Iterate/Small_int/StdVector");
-BENCHMARK(BM_Iterate_Small<boost::container::vector<SmallElement>, SmallElement>)->Name("Iterate/Small_int/BoostVector");
-BENCHMARK(BM_Iterate_Small<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Iterate/Small_int/SmallVector");
-BENCHMARK(BM_Iterate_Small<boost::container::static_vector<SmallElement, 8>, SmallElement>)->Name("Iterate/Small_int/StaticVector");
-BENCHMARK(BM_Iterate_Small<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Iterate/Small_int/InlinedVector");
+BENCHMARK(BM_Iterate_SmallVector<std::vector<SmallItem>, SmallItem>)->Name("Iterate/SmallVector_SmallItem/StdVector");
+BENCHMARK(BM_Iterate_SmallVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Iterate/SmallVector_SmallItem/BoostVector");
+BENCHMARK(BM_Iterate_SmallVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Iterate/SmallVector_SmallItem/SmallVector");
+BENCHMARK(BM_Iterate_SmallVector<boost::container::static_vector<SmallItem, 8>, SmallItem>)->Name("Iterate/SmallVector_SmallItem/StaticVector");
+BENCHMARK(BM_Iterate_SmallVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Iterate/SmallVector_SmallItem/InlinedVector");
 
 // =============================================================================
-// Medium iteration (64 elements)
+// MediumVector iteration (64 elements)
 // =============================================================================
 
 template<typename Container, typename Element>
-static void BM_Iterate_Medium(benchmark::State& state) {
+static void BM_Iterate_MediumVector(benchmark::State& state) {
     Container vec;
     for (int i = 0; i < 64; ++i) {
         vec.push_back(Element(i));
@@ -63,30 +63,30 @@ static void BM_Iterate_Medium(benchmark::State& state) {
     }
 }
 
-BENCHMARK(BM_Iterate_Medium<std::vector<SmallElement>, SmallElement>)->Name("Iterate/Medium_int/StdVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::vector<SmallElement>, SmallElement>)->Name("Iterate/Medium_int/BoostVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Iterate/Medium_int/SmallVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::static_vector<SmallElement, 64>, SmallElement>)->Name("Iterate/Medium_int/StaticVector");
-BENCHMARK(BM_Iterate_Medium<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Iterate/Medium_int/InlinedVector");
+BENCHMARK(BM_Iterate_MediumVector<std::vector<SmallItem>, SmallItem>)->Name("Iterate/MediumVector_SmallItem/StdVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Iterate/MediumVector_SmallItem/BoostVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Iterate/MediumVector_SmallItem/SmallVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::static_vector<SmallItem, 64>, SmallItem>)->Name("Iterate/MediumVector_SmallItem/StaticVector");
+BENCHMARK(BM_Iterate_MediumVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Iterate/MediumVector_SmallItem/InlinedVector");
 
-BENCHMARK(BM_Iterate_Medium<std::vector<Point>, Point>)->Name("Iterate/Medium_Point/StdVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::vector<Point>, Point>)->Name("Iterate/Medium_Point/BoostVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::small_vector<Point, 8>, Point>)->Name("Iterate/Medium_Point/SmallVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::static_vector<Point, 64>, Point>)->Name("Iterate/Medium_Point/StaticVector");
-BENCHMARK(BM_Iterate_Medium<absl::InlinedVector<Point, 8>, Point>)->Name("Iterate/Medium_Point/InlinedVector");
+BENCHMARK(BM_Iterate_MediumVector<std::vector<MediumItem>, MediumItem>)->Name("Iterate/MediumVector_MediumItem/StdVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::vector<MediumItem>, MediumItem>)->Name("Iterate/MediumVector_MediumItem/BoostVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Iterate/MediumVector_MediumItem/SmallVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::static_vector<MediumItem, 64>, MediumItem>)->Name("Iterate/MediumVector_MediumItem/StaticVector");
+BENCHMARK(BM_Iterate_MediumVector<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Iterate/MediumVector_MediumItem/InlinedVector");
 
-BENCHMARK(BM_Iterate_Medium<std::vector<LargeStruct>, LargeStruct>)->Name("Iterate/Medium_LargeStruct/StdVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Iterate/Medium_LargeStruct/BoostVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Iterate/Medium_LargeStruct/SmallVector");
-BENCHMARK(BM_Iterate_Medium<boost::container::static_vector<LargeStruct, 64>, LargeStruct>)->Name("Iterate/Medium_LargeStruct/StaticVector");
-BENCHMARK(BM_Iterate_Medium<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Iterate/Medium_LargeStruct/InlinedVector");
+BENCHMARK(BM_Iterate_MediumVector<std::vector<LargeItem>, LargeItem>)->Name("Iterate/MediumVector_LargeItem/StdVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::vector<LargeItem>, LargeItem>)->Name("Iterate/MediumVector_LargeItem/BoostVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Iterate/MediumVector_LargeItem/SmallVector");
+BENCHMARK(BM_Iterate_MediumVector<boost::container::static_vector<LargeItem, 64>, LargeItem>)->Name("Iterate/MediumVector_LargeItem/StaticVector");
+BENCHMARK(BM_Iterate_MediumVector<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Iterate/MediumVector_LargeItem/InlinedVector");
 
 // =============================================================================
-// Large iteration (1024 elements)
+// LargeVector iteration (1024 elements)
 // =============================================================================
 
 template<typename Container, typename Element>
-static void BM_Iterate_Large(benchmark::State& state) {
+static void BM_Iterate_LargeVector(benchmark::State& state) {
     Container vec;
     for (int i = 0; i < 1024; ++i) {
         vec.push_back(Element(i));
@@ -102,22 +102,22 @@ static void BM_Iterate_Large(benchmark::State& state) {
     }
 }
 
-BENCHMARK(BM_Iterate_Large<std::vector<SmallElement>, SmallElement>)->Name("Iterate/Large_int/StdVector");
-BENCHMARK(BM_Iterate_Large<boost::container::vector<SmallElement>, SmallElement>)->Name("Iterate/Large_int/BoostVector");
-BENCHMARK(BM_Iterate_Large<boost::container::small_vector<SmallElement, 8>, SmallElement>)->Name("Iterate/Large_int/SmallVector");
-BENCHMARK(BM_Iterate_Large<boost::container::static_vector<SmallElement, 1024>, SmallElement>)->Name("Iterate/Large_int/StaticVector");
-BENCHMARK(BM_Iterate_Large<absl::InlinedVector<SmallElement, 8>, SmallElement>)->Name("Iterate/Large_int/InlinedVector");
+BENCHMARK(BM_Iterate_LargeVector<std::vector<SmallItem>, SmallItem>)->Name("Iterate/LargeVector_SmallItem/StdVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::vector<SmallItem>, SmallItem>)->Name("Iterate/LargeVector_SmallItem/BoostVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::small_vector<SmallItem, 8>, SmallItem>)->Name("Iterate/LargeVector_SmallItem/SmallVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::static_vector<SmallItem, 1024>, SmallItem>)->Name("Iterate/LargeVector_SmallItem/StaticVector");
+BENCHMARK(BM_Iterate_LargeVector<absl::InlinedVector<SmallItem, 8>, SmallItem>)->Name("Iterate/LargeVector_SmallItem/InlinedVector");
 
-BENCHMARK(BM_Iterate_Large<std::vector<Point>, Point>)->Name("Iterate/Large_Point/StdVector");
-BENCHMARK(BM_Iterate_Large<boost::container::vector<Point>, Point>)->Name("Iterate/Large_Point/BoostVector");
-BENCHMARK(BM_Iterate_Large<boost::container::small_vector<Point, 8>, Point>)->Name("Iterate/Large_Point/SmallVector");
-BENCHMARK(BM_Iterate_Large<boost::container::static_vector<Point, 1024>, Point>)->Name("Iterate/Large_Point/StaticVector");
-BENCHMARK(BM_Iterate_Large<absl::InlinedVector<Point, 8>, Point>)->Name("Iterate/Large_Point/InlinedVector");
+BENCHMARK(BM_Iterate_LargeVector<std::vector<MediumItem>, MediumItem>)->Name("Iterate/LargeVector_MediumItem/StdVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::vector<MediumItem>, MediumItem>)->Name("Iterate/LargeVector_MediumItem/BoostVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::small_vector<MediumItem, 8>, MediumItem>)->Name("Iterate/LargeVector_MediumItem/SmallVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::static_vector<MediumItem, 1024>, MediumItem>)->Name("Iterate/LargeVector_MediumItem/StaticVector");
+BENCHMARK(BM_Iterate_LargeVector<absl::InlinedVector<MediumItem, 8>, MediumItem>)->Name("Iterate/LargeVector_MediumItem/InlinedVector");
 
-BENCHMARK(BM_Iterate_Large<std::vector<LargeStruct>, LargeStruct>)->Name("Iterate/Large_LargeStruct/StdVector");
-BENCHMARK(BM_Iterate_Large<boost::container::vector<LargeStruct>, LargeStruct>)->Name("Iterate/Large_LargeStruct/BoostVector");
-BENCHMARK(BM_Iterate_Large<boost::container::small_vector<LargeStruct, 8>, LargeStruct>)->Name("Iterate/Large_LargeStruct/SmallVector");
-BENCHMARK(BM_Iterate_Large<boost::container::static_vector<LargeStruct, 1024>, LargeStruct>)->Name("Iterate/Large_LargeStruct/StaticVector");
-BENCHMARK(BM_Iterate_Large<absl::InlinedVector<LargeStruct, 8>, LargeStruct>)->Name("Iterate/Large_LargeStruct/InlinedVector");
+BENCHMARK(BM_Iterate_LargeVector<std::vector<LargeItem>, LargeItem>)->Name("Iterate/LargeVector_LargeItem/StdVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::vector<LargeItem>, LargeItem>)->Name("Iterate/LargeVector_LargeItem/BoostVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::small_vector<LargeItem, 8>, LargeItem>)->Name("Iterate/LargeVector_LargeItem/SmallVector");
+BENCHMARK(BM_Iterate_LargeVector<boost::container::static_vector<LargeItem, 1024>, LargeItem>)->Name("Iterate/LargeVector_LargeItem/StaticVector");
+BENCHMARK(BM_Iterate_LargeVector<absl::InlinedVector<LargeItem, 8>, LargeItem>)->Name("Iterate/LargeVector_LargeItem/InlinedVector");
 
 BENCHMARK_MAIN();
