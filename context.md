@@ -21,10 +21,13 @@
 - `branch_prediction/` - Predictable vs unpredictable branch patterns comparison
 - `ilp_no_data_dependencies/` - ILP through loop unrolling with independent operations
 - `ilp_data_dependencies/` - ILP impact of data dependencies between loop iterations
+- `containers/vector/` - Multi-binary project comparing 5 vector implementations (std, boost variants, abseil)
 - `skeleton/` - Template for creating new projects
 
 **Infrastructure:**
-- `benchmark/` - Google Benchmark library (auto-installed)
+- `3rdparty/` - Third-party dependencies (organized structure)
+  - `src/` - Source code (google/benchmark, boost, abseil-cpp)
+  - `.build/` - Pre-built libraries (benchmark, abseil)
 - `cmake/` - Common CMake configuration
 - `.build/` - Centralized build directory (all projects and configurations)
 - `.benchmarks/` - Benchmark results organized by project
@@ -77,7 +80,24 @@ Demonstrates Instruction-Level Parallelism (ILP) through loop unrolling. Compare
 ### 8. ilp_data_dependencies
 Demonstrates impact of data dependencies on ILP. Compares independent iterations (each iteration uses current pair average) vs dependent iterations (uses previous pair average via prev_avg variable). The dependency chain in the dependent version prevents CPU from parallelizing iterations, showing ~2-3x performance difference.
 
-### 9. skeleton
+### 9. containers/vector
+**Multi-binary benchmark project** comparing 5 vector container implementations:
+- `std::vector` - Standard library vector (heap-based)
+- `boost::container::vector` - Boost vector (heap-based, optimized growth)
+- `boost::container::small_vector` - Small buffer optimization (8 elements inline, then heap)
+- `boost::container::static_vector` - Fully stack-based (fixed capacity)
+- `absl::InlinedVector` - Google Abseil inline vector (8 elements inline)
+
+**Structure** (multiple binaries instead of single main.cpp):
+- `common.h` - Shared data structures (SmallElement, Point, LargeStruct)
+- `bench_insert.cpp` - Insert benchmarks (Small: 8, Medium: 64, Large: 1024 elements)
+- `bench_copy.cpp` - Copy benchmarks (Small/Medium/Large)
+- `bench_iterate.cpp` - Iteration benchmarks (Small/Medium/Large)
+- `bench_clearrefill.cpp` - Clear and refill pattern benchmarks (Small only)
+
+**Hierarchical naming**: Benchmarks use names like `Insert/Small_int/StdVector` for automatic grouping by operation/size/element-type.
+
+### 10. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
@@ -116,11 +136,60 @@ Each project's `CMakeLists.txt` supports:
 - Values: `O0`, `O1`, `O2` (default), `O3`, `Os`, `Ofast`
 - Usage: `-DOPTIMIZATION_LEVEL=O3`
 
-### Google Benchmark Integration
+### Third-Party Dependencies
 
-- Automatically clones from GitHub if not found in `../benchmark`
-- Builds in `../benchmark/build`
-- Shared across all projects
+**Organization** (`3rdparty/` directory):
+```
+3rdparty/
+├── src/                    # Source code (cloned once, shared)
+│   ├── benchmark/          # Google Benchmark
+│   ├── boost/              # Boost (header-only: container, config, assert, etc.)
+│   └── abseil-cpp/         # Google Abseil
+└── .build/                 # Pre-built libraries (compiled once, reused)
+    ├── benchmark/          # Google Benchmark build
+    └── abseil/             # Abseil build (for hash containers)
+```
+
+**Key Benefits**:
+- **No rebuilds**: Dependencies built once per system, reused across all projects
+- **Shared source**: Single clone of each library, no duplication
+- **Automatic setup**: CMake clones and builds missing dependencies on first run
+- **Fast configuration**: Projects just link pre-built `.a` files
+
+**Dependency Details**:
+1. **Google Benchmark**: Always required, built in Release mode with NDEBUG
+2. **Boost**: Header-only (container, config, assert, type_traits, core, move, intrusive)
+3. **Abseil**: Builds `libabsl_raw_hash_set.a` and `libabsl_hashtablez_sampler.a` for hash containers
+
+**Nested Project Support**: Path calculation works for both flat (`inlining/`) and nested (`containers/vector/`) projects.
+
+### Multi-Binary Projects
+
+Some projects (like `containers/vector`) use multiple benchmark binaries instead of single `main.cpp`:
+
+**Pattern**:
+```
+containers/vector/
+├── common.h              # Shared definitions
+├── bench_insert.cpp      # Binary 1: Insert benchmarks
+├── bench_copy.cpp        # Binary 2: Copy benchmarks  
+├── bench_iterate.cpp     # Binary 3: Iterate benchmarks
+└── bench_clearrefill.cpp # Binary 4: ClearRefill benchmarks
+```
+
+**CMakeLists.txt** creates multiple executables:
+```cmake
+add_executable(bench_insert bench_insert.cpp)
+add_executable(bench_copy bench_copy.cpp)
+# ... etc
+```
+
+**Benefits**:
+- Logical separation by operation type
+- Easier navigation and maintenance
+- Can run subsets: `--benchmark_filter="Insert/Medium"`
+
+**benchmarks.sh** automatically detects and runs all `bench_*` binaries in build directory.
 
 ### Example Build
 

@@ -37,7 +37,11 @@ perfection/
 │       ├── clang_O3.dis
 │       └── gcc_O3.dis
 ├── cmake/               # Common CMake configuration
-├── benchmark/           # Google Benchmark (auto-installed)
+├── 3rdparty/            # Third-party dependencies (auto-installed)
+│   ├── src/             # Source code (benchmark, boost, abseil)
+│   └── .build/          # Pre-built libraries
+├── containers/          # Container benchmark projects
+│   └── vector/          # Vector container comparisons
 ├── inlining/            # Inlining comparison project
 ├── virtual/             # Virtual dispatch comparison
 ├── noexcept/            # noexcept impact comparison
@@ -46,6 +50,9 @@ perfection/
 ```
 
 ## Projects
+
+### containers/vector
+Compares vector container implementations: `std::vector`, `boost::container::vector`, `boost::small_vector`, `boost::container::static_vector`, and `absl::InlinedVector` across different operations (insert, copy, iterate, clear/refill) and element sizes.
 
 ### inlining
 Compares `FORCE_INLINE` vs `NOINLINE` function attributes.
