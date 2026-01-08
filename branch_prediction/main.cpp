@@ -117,7 +117,7 @@ void prfct_swap_unpredictable_unlikely() {
 
 // ========== BENCHMARKS ==========
 
-static void BM_predictable(benchmark::State& state) {
+static void BM_predictable_baseline(benchmark::State& state) {
     initialize_data();
     for (auto _ : state) {
         prfct_swap_predictable();
@@ -125,7 +125,7 @@ static void BM_predictable(benchmark::State& state) {
     }
 }
 
-static void BM_unpredictable(benchmark::State& state) {
+static void BM_unpredictable_baseline(benchmark::State& state) {
     initialize_data();
     for (auto _ : state) {
         prfct_swap_unpredictable();
@@ -133,7 +133,7 @@ static void BM_unpredictable(benchmark::State& state) {
     }
 }
 
-static void BM_predictable_likely(benchmark::State& state) {
+static void BM_predictable_likely_correct(benchmark::State& state) {
     initialize_data();
     for (auto _ : state) {
         prfct_swap_predictable_likely();
@@ -141,7 +141,7 @@ static void BM_predictable_likely(benchmark::State& state) {
     }
 }
 
-static void BM_predictable_unlikely(benchmark::State& state) {
+static void BM_predictable_unlikely_wrong(benchmark::State& state) {
     initialize_data();
     for (auto _ : state) {
         prfct_swap_predictable_unlikely();
@@ -149,7 +149,7 @@ static void BM_predictable_unlikely(benchmark::State& state) {
     }
 }
 
-static void BM_unpredictable_likely(benchmark::State& state) {
+static void BM_unpredictable_likely_wrong(benchmark::State& state) {
     initialize_data();
     for (auto _ : state) {
         prfct_swap_unpredictable_likely();
@@ -157,7 +157,7 @@ static void BM_unpredictable_likely(benchmark::State& state) {
     }
 }
 
-static void BM_unpredictable_unlikely(benchmark::State& state) {
+static void BM_unpredictable_unlikely_wrong(benchmark::State& state) {
     initialize_data();
     for (auto _ : state) {
         prfct_swap_unpredictable_unlikely();
@@ -165,16 +165,16 @@ static void BM_unpredictable_unlikely(benchmark::State& state) {
     }
 }
 
-// Baseline
-BENCHMARK(BM_predictable);
-BENCHMARK(BM_unpredictable);
+// Baseline (no hints)
+BENCHMARK(BM_predictable_baseline);
+BENCHMARK(BM_unpredictable_baseline);
 
-// Correct hints
-BENCHMARK(BM_predictable_likely);
+// Correct hint: likely on predictable branch
+BENCHMARK(BM_predictable_likely_correct);
 
-// Wrong hints
-BENCHMARK(BM_predictable_unlikely);
-BENCHMARK(BM_unpredictable_likely);
-BENCHMARK(BM_unpredictable_unlikely);
+// Wrong hints: contradicting reality
+BENCHMARK(BM_predictable_unlikely_wrong);
+BENCHMARK(BM_unpredictable_likely_wrong);
+BENCHMARK(BM_unpredictable_unlikely_wrong);
 
 BENCHMARK_MAIN();
