@@ -58,7 +58,23 @@ for compiler in "${COMPILERS[@]}"; do
         echo "============================================"
         
         echo "========== ${compiler} -${opt_level} ==========" >> "${BENCHMARK_FILE}"
-        "${BUILD_DIR}/${BINARY_NAME}" 2>&1 | grep -E "^(Benchmark|BM_|---)" >> "${BENCHMARK_FILE}"
+        
+        # Check if we have multiple bench_* binaries (new structure)
+        BENCH_BINARIES=$(find "${BUILD_DIR}" -maxdepth 1 -name "bench_*" -type f 2>/dev/null || true)
+        
+        if [ -n "${BENCH_BINARIES}" ]; then
+            # Multiple binaries - run each one
+            for bench_binary in ${BENCH_BINARIES}; do
+                BENCH_NAME=$(basename "${bench_binary}")
+                echo "--- ${BENCH_NAME} ---" >> "${BENCHMARK_FILE}"
+                "${bench_binary}" 2>&1 | grep -E "^(Benchmark|[A-Z][a-z]+/|---)" >> "${BENCHMARK_FILE}"
+                echo "" >> "${BENCHMARK_FILE}"
+            done
+        else
+            # Single binary (fallback to old behavior)
+            "${BUILD_DIR}/${BINARY_NAME}" 2>&1 | grep -E "^(Benchmark|BM_|---)" >> "${BENCHMARK_FILE}"
+        fi
+        
         echo "" >> "${BENCHMARK_FILE}"
         
         echo ""
