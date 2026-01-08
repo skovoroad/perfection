@@ -14,8 +14,12 @@ fi
 
 PROJECT_NAME="$1"
 PROJECT_DIR="${SCRIPT_DIR}/${PROJECT_NAME}"
+# For nested projects (e.g., containers/vector), use the last component as binary name
+BINARY_NAME=$(basename "${PROJECT_NAME}")
 BUILD_BASE_DIR="${SCRIPT_DIR}/.build"
-BENCHMARKS_DIR="${SCRIPT_DIR}/.benchmarks/${PROJECT_NAME}"
+# Replace slashes with underscores for directory names
+SAFE_PROJECT_NAME="${PROJECT_NAME//\//_}"
+BENCHMARKS_DIR="${SCRIPT_DIR}/.benchmarks/${SAFE_PROJECT_NAME}"
 BENCHMARK_FILE="${BENCHMARKS_DIR}/benchmark.log"
 
 if [ ! -d "${PROJECT_DIR}" ]; then
@@ -39,7 +43,7 @@ echo ""
 
 for compiler in "${COMPILERS[@]}"; do
     for opt_level in "${OPT_LEVELS[@]}"; do
-        BUILD_DIR="${BUILD_BASE_DIR}/${PROJECT_NAME}/${compiler}_${opt_level}"
+        BUILD_DIR="${BUILD_BASE_DIR}/${SAFE_PROJECT_NAME}/${compiler}_${opt_level}"
         
         echo "============================================"
         echo "Building ${PROJECT_NAME} with ${compiler} -${opt_level}..."
@@ -54,7 +58,7 @@ for compiler in "${COMPILERS[@]}"; do
         echo "============================================"
         
         echo "========== ${compiler} -${opt_level} ==========" >> "${BENCHMARK_FILE}"
-        "${BUILD_DIR}/${PROJECT_NAME}" 2>&1 | grep -E "^(Benchmark|BM_|---)" >> "${BENCHMARK_FILE}"
+        "${BUILD_DIR}/${BINARY_NAME}" 2>&1 | grep -E "^(Benchmark|BM_|---)" >> "${BENCHMARK_FILE}"
         echo "" >> "${BENCHMARK_FILE}"
         
         echo ""

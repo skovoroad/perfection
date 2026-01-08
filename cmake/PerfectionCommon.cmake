@@ -35,7 +35,16 @@ function(perfection_setup_project PROJECT_NAME)
     message(STATUS "Using optimization level: -${OPTIMIZATION_LEVEL}")
 
     # Third-party dependencies setup
-    set(THIRDPARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty")
+    # Navigate up to project root (works for both single-level and nested projects)
+    get_filename_component(PROJECT_PARENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
+    if(EXISTS "${PROJECT_PARENT_DIR}/cmake/PerfectionCommon.cmake")
+        # Single-level project (e.g., inlining/)
+        set(THIRDPARTY_DIR "${PROJECT_PARENT_DIR}/3rdparty")
+    else()
+        # Nested project (e.g., containers/vector/)
+        get_filename_component(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+        set(THIRDPARTY_DIR "${PROJECT_ROOT_DIR}/3rdparty")
+    endif()
     set(THIRDPARTY_SRC_DIR "${THIRDPARTY_DIR}/src")
     set(THIRDPARTY_BUILD_DIR "${THIRDPARTY_DIR}/.build")
 
@@ -69,10 +78,12 @@ function(perfection_setup_project PROJECT_NAME)
             COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=Release 
                     -DBENCHMARK_DOWNLOAD_DEPENDENCIES=ON 
                     -DBENCHMARK_ENABLE_TESTING=OFF
+                    "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -DNDEBUG"
                     "${BENCHMARK_SRC_DIR}"
             WORKING_DIRECTORY "${BENCHMARK_BUILD_DIR}"
             RESULT_VARIABLE CMAKE_RESULT
         )
+
         
         if(NOT CMAKE_RESULT EQUAL "0")
             message(FATAL_ERROR "Failed to configure Google Benchmark")
@@ -174,6 +185,31 @@ function(perfection_setup_project PROJECT_NAME)
     # Add the executable
     add_executable(${PROJECT_NAME} main.cpp)
 
+    # Add Boost include directories (header-only)
+    # Boost libraries have their headers in libs/*/include
+    target_include_directories(${PROJECT_NAME} PRIVATE 
+        "${BOOST_SRC_DIR}/libs/container/include"
+        "${BOOST_SRC_DIR}/libs/config/include"
+        "${BOOST_SRC_DIR}/libs/assert/include"
+        "${BOOST_SRC_DIR}/libs/static_assert/include"
+        "${BOOST_SRC_DIR}/libs/type_traits/include"
+        "${BOOST_SRC_DIR}/libs/core/include"
+        "${BOOST_SRC_DIR}/libs/move/include"
+        "${BOOST_SRC_DIR}/libs/intrusive/include"
+    )
+
+
+    # Add Abseil include directories and link libraries
+    target_include_directories(${PROJECT_NAME} PRIVATE "${ABSEIL_SRC_DIR}")
+    
     # Link Google Benchmark
     target_link_libraries(${PROJECT_NAME} PRIVATE benchmark::benchmark)
+    
+    # Link Abseil libraries (only if they're actually used)
+    # Common Abseil libraries that might be needed
+    if(EXISTS "${ABSEIL_BUILD_DIR}/absl/container/CMakeFiles/inlined_vector.dir")
+        target_link_libraries(${PROJECT_NAME} PRIVATE 
+            "${ABSEIL_BUILD_DIR}/absl/container/libabsl_inlined_vector.a"
+        )
+    endif()
 endfunction()
