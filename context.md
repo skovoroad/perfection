@@ -93,7 +93,6 @@ Demonstrates impact of data dependencies on ILP. Compares independent iterations
 - `bench_insert.cpp` - Insert benchmarks (Small: 8, Medium: 64, Large: 1024 elements)
 - `bench_copy.cpp` - Copy benchmarks (Small/Medium/Large)
 - `bench_iterate.cpp` - Iteration benchmarks (Small/Medium/Large)
-- `bench_clearrefill.cpp` - Clear and refill pattern benchmarks (Small only)
 
 **Hierarchical naming**: Benchmarks use names like `Insert/Small_int/StdVector` for automatic grouping by operation/size/element-type.
 

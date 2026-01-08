@@ -62,8 +62,3 @@ target_link_libraries(bench_copy PRIVATE ${COMMON_LIBS})
 add_executable(bench_iterate bench_iterate.cpp)
 target_include_directories(bench_iterate PRIVATE ${COMMON_INCLUDES})
 target_link_libraries(bench_iterate PRIVATE ${COMMON_LIBS})
-
-# bench_clearrefill
-add_executable(bench_clearrefill bench_clearrefill.cpp)
-target_include_directories(bench_clearrefill PRIVATE ${COMMON_INCLUDES})
-target_link_libraries(bench_clearrefill PRIVATE ${COMMON_LIBS})
