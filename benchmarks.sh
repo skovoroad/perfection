@@ -67,7 +67,7 @@ for compiler in "${COMPILERS[@]}"; do
             for bench_binary in ${BENCH_BINARIES}; do
                 BENCH_NAME=$(basename "${bench_binary}")
                 echo "--- ${BENCH_NAME} ---" >> "${BENCHMARK_FILE}"
-                "${bench_binary}" 2>&1 | grep -E "^(Benchmark|[A-Z][a-z]+/|---)" >> "${BENCHMARK_FILE}"
+                "${bench_binary}" 2>&1 | grep -E "^(Benchmark|[A-Z][A-Za-z]+/|---)" >> "${BENCHMARK_FILE}"
                 echo "" >> "${BENCHMARK_FILE}"
             done
         else
