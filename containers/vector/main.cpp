@@ -88,13 +88,22 @@ static void BM_Insert_Medium(benchmark::State& state) {
 BENCHMARK(BM_Insert_Medium<std::vector<SmallElement>, SmallElement>);
 BENCHMARK(BM_Insert_Medium<boost::container::vector<SmallElement>, SmallElement>);
 BENCHMARK(BM_Insert_Medium<boost::container::small_vector<SmallElement, 8>, SmallElement>);
+BENCHMARK(BM_Insert_Medium<boost::container::static_vector<SmallElement, 64>, SmallElement>);
 BENCHMARK(BM_Insert_Medium<absl::InlinedVector<SmallElement, 8>, SmallElement>);
 
 // Insert Medium - Point (all containers)
 BENCHMARK(BM_Insert_Medium<std::vector<Point>, Point>);
 BENCHMARK(BM_Insert_Medium<boost::container::vector<Point>, Point>);
 BENCHMARK(BM_Insert_Medium<boost::container::small_vector<Point, 8>, Point>);
+BENCHMARK(BM_Insert_Medium<boost::container::static_vector<Point, 64>, Point>);
 BENCHMARK(BM_Insert_Medium<absl::InlinedVector<Point, 8>, Point>);
+
+// Insert Medium - LargeStruct (all containers)
+BENCHMARK(BM_Insert_Medium<std::vector<LargeStruct>, LargeStruct>);
+BENCHMARK(BM_Insert_Medium<boost::container::vector<LargeStruct>, LargeStruct>);
+BENCHMARK(BM_Insert_Medium<boost::container::small_vector<LargeStruct, 8>, LargeStruct>);
+BENCHMARK(BM_Insert_Medium<boost::container::static_vector<LargeStruct, 64>, LargeStruct>);
+BENCHMARK(BM_Insert_Medium<absl::InlinedVector<LargeStruct, 8>, LargeStruct>);
 
 // =============================================================================
 // Benchmark: INSERT - Large containers (1024 elements)
@@ -116,13 +125,22 @@ static void BM_Insert_Large(benchmark::State& state) {
 BENCHMARK(BM_Insert_Large<std::vector<SmallElement>, SmallElement>);
 BENCHMARK(BM_Insert_Large<boost::container::vector<SmallElement>, SmallElement>);
 BENCHMARK(BM_Insert_Large<boost::container::small_vector<SmallElement, 8>, SmallElement>);
+BENCHMARK(BM_Insert_Large<boost::container::static_vector<SmallElement, 1024>, SmallElement>);
 BENCHMARK(BM_Insert_Large<absl::InlinedVector<SmallElement, 8>, SmallElement>);
 
 // Insert Large - Point (all containers)
 BENCHMARK(BM_Insert_Large<std::vector<Point>, Point>);
 BENCHMARK(BM_Insert_Large<boost::container::vector<Point>, Point>);
 BENCHMARK(BM_Insert_Large<boost::container::small_vector<Point, 8>, Point>);
+BENCHMARK(BM_Insert_Large<boost::container::static_vector<Point, 1024>, Point>);
 BENCHMARK(BM_Insert_Large<absl::InlinedVector<Point, 8>, Point>);
+
+// Insert Large - LargeStruct (all containers)
+BENCHMARK(BM_Insert_Large<std::vector<LargeStruct>, LargeStruct>);
+BENCHMARK(BM_Insert_Large<boost::container::vector<LargeStruct>, LargeStruct>);
+BENCHMARK(BM_Insert_Large<boost::container::small_vector<LargeStruct, 8>, LargeStruct>);
+BENCHMARK(BM_Insert_Large<boost::container::static_vector<LargeStruct, 1024>, LargeStruct>);
+BENCHMARK(BM_Insert_Large<absl::InlinedVector<LargeStruct, 8>, LargeStruct>);
 
 // =============================================================================
 // Benchmark: ITERATION - Sequential access
@@ -178,9 +196,17 @@ BENCHMARK(BM_Copy_Small<absl::InlinedVector<SmallElement, 8>, SmallElement>);
 
 // Copy Small - Point (all containers)
 BENCHMARK(BM_Copy_Small<std::vector<Point>, Point>);
+BENCHMARK(BM_Copy_Small<boost::container::vector<Point>, Point>);
 BENCHMARK(BM_Copy_Small<boost::container::small_vector<Point, 8>, Point>);
 BENCHMARK(BM_Copy_Small<boost::container::static_vector<Point, 8>, Point>);
 BENCHMARK(BM_Copy_Small<absl::InlinedVector<Point, 8>, Point>);
+
+// Copy Small - LargeStruct (all containers)
+BENCHMARK(BM_Copy_Small<std::vector<LargeStruct>, LargeStruct>);
+BENCHMARK(BM_Copy_Small<boost::container::vector<LargeStruct>, LargeStruct>);
+BENCHMARK(BM_Copy_Small<boost::container::small_vector<LargeStruct, 8>, LargeStruct>);
+BENCHMARK(BM_Copy_Small<boost::container::static_vector<LargeStruct, 8>, LargeStruct>);
+BENCHMARK(BM_Copy_Small<absl::InlinedVector<LargeStruct, 8>, LargeStruct>);
 
 // =============================================================================
 // Benchmark: CLEAR and REFILL
