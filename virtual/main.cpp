@@ -1,73 +1,75 @@
 #include <random>
 #include <benchmark/benchmark.h>
 
-static char random_data[1024*1024];
+// Size: 1 million floats = 4MB array
+constexpr size_t ARRAY_SIZE = 1024 * 1024;
+static float data[ARRAY_SIZE];
 
-void initialize_random_data() {
+void initialize_data() {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 255);
+    std::uniform_real_distribution<float> dis(1.0f, 100.0f);
     
-    for (size_t i = 0; i < sizeof(random_data); ++i) {
-        random_data[i] = static_cast<char>(dis(gen));
+    for (size_t i = 0; i < ARRAY_SIZE; ++i) {
+        data[i] = dis(gen);
     }
 }
 
-// Non-virtual swapper class
-class NoVirtualSwapper {
+// Non-virtual class with regular method
+class NonVirtualTransform {
 public:
-    void prfct_swap(char& a, char& b) {
-        std::swap(a, b);
+    float prfct_transform(float x) {
+        return x * 1.5f + 0.1f;
     }
 };
 
-// Pure virtual interface
-class VirtualSwapper {
+// Virtual interface
+class IVirtualTransform {
 public:
-    virtual ~VirtualSwapper() = default;
-    virtual void prfct_swap(char& a, char& b) = 0;
+    virtual ~IVirtualTransform() = default;
+    virtual float prfct_transform(float x) = 0;
 };
 
-// Implementation of virtual interface
-class VirtualSwapperImpl : public VirtualSwapper {
+// Virtual implementation with SAME logic as non-virtual
+class VirtualTransformImpl : public IVirtualTransform {
 public:
-    virtual void prfct_swap(char& a, char& b) override {
-        std::swap(a, b);
+    float prfct_transform(float x) override {
+        return x * 1.5f + 0.1f;
     }
 };
 
-void prfct_process_data_nonvirtual() {
-    NoVirtualSwapper swapper;
-    size_t size = sizeof(random_data);
-    for (size_t i = 0; i < size / 2; ++i) {
-        swapper.prfct_swap(random_data[i], random_data[size - 1 - i]);
+// Process through NON-VIRTUAL method call
+void prfct_process_nonvirtual(float* arr, size_t size) {
+    NonVirtualTransform t;
+    for (size_t i = 0; i < size; ++i) {
+        arr[i] = t.prfct_transform(arr[i]);
     }
 }
 
-void prfct_process_data_virtual() {
-    VirtualSwapperImpl impl;
-    VirtualSwapper* swapper = &impl;
-    size_t size = sizeof(random_data);
-    for (size_t i = 0; i < size / 2; ++i) {
-        swapper->prfct_swap(random_data[i], random_data[size - 1 - i]);
+// Process through VIRTUAL method call
+void prfct_process_virtual(float* arr, size_t size) {
+    VirtualTransformImpl impl;
+    IVirtualTransform* t = &impl;
+    for (size_t i = 0; i < size; ++i) {
+        arr[i] = t->prfct_transform(arr[i]);
     }
 }
 
 static void BM_nonvirtual(benchmark::State& state) {
-    initialize_random_data();
+    initialize_data();
     
     for (auto _ : state) {
-        prfct_process_data_nonvirtual();
-        benchmark::DoNotOptimize(random_data);
+        prfct_process_nonvirtual(data, ARRAY_SIZE);
+        benchmark::DoNotOptimize(data);
     }
 }
 
 static void BM_virtual(benchmark::State& state) {
-    initialize_random_data();
+    initialize_data();
     
     for (auto _ : state) {
-        prfct_process_data_virtual();
-        benchmark::DoNotOptimize(random_data);
+        prfct_process_virtual(data, ARRAY_SIZE);
+        benchmark::DoNotOptimize(data);
     }
 }
 

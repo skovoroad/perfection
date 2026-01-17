@@ -58,7 +58,7 @@ Compares vector container implementations: `std::vector`, `boost::container::vec
 Compares `FORCE_INLINE` vs `NOINLINE` function attributes.
 
 ### virtual
-Compares virtual vs non-virtual function calls.
+Demonstrates how virtual functions block compiler optimizations (inlining and vectorization) rather than just vtable overhead. Compares virtual vs non-virtual method calls with identical logic.
 
 ### noexcept
 Tests performance impact of `noexcept` specifier.

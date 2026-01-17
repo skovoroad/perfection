@@ -60,7 +60,7 @@
 Compares performance impact of function inlining using `FORCE_INLINE` vs `NOINLINE` attributes. Benchmarks reverse a 1MB array using inlined and non-inlined swap functions.
 
 ### 2. virtual
-Compares virtual function calls vs non-virtual function calls. Uses class hierarchy with base class pointer to force vtable lookup in virtual version.
+Demonstrates how virtual functions block compiler optimizations (inlining and vectorization). Compares virtual vs non-virtual method calls performing identical float transformations (`x * 1.5f + 0.1f`) on 1M element array. Shows that the real cost isn't the vtable lookup (~1-2 instructions), but the prevented optimizations. Clang shows 10x slowdown (can't vectorize virtual calls). GCC O3 performs devirtualization when concrete type is known, generating identical vectorized code for both versions.
 
 ### 3. noexcept
 Compares performance impact of `noexcept` specifier on virtual functions. Tests whether declaring functions as `noexcept` affects runtime performance.

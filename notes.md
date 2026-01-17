@@ -48,3 +48,24 @@ Data dependencies between loop iterations prevent CPU from exploiting parallelis
 
 ### Findings
 Memory access patterns strongly impact performance due to cache misses and hardware prefetching.
+
+---
+
+## Virtual Functions
+
+**Project**: `virtual`
+
+### Findings
+Virtual functions harm performance by **blocking compiler optimizations**, not by vtable lookup overhead:
+
+- **Clang O3**: Virtual version 10x slower (154 µs vs 1449 µs)
+  - Cannot inline virtual function through vtable
+  - Cannot vectorize loop with virtual calls
+  - Uses scalar SSE instead of packed SIMD
+
+- **GCC O3**: Virtual version **faster** (115 µs vs 197 µs)
+  - Performs **devirtualization** when concrete type is known
+  - Generates identical vectorized code for both versions
+  - Shows that devirtualization is possible when compiler sees concrete type
+
+**Key takeaway**: Real cost of virtual functions is prevented optimizations (inlining + vectorization), not the 1-2 instruction vtable lookup.
