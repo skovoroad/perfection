@@ -4,4 +4,4 @@
 - aliasing
 - allocation vs stack
 - bit operations vs arithmetics
-    
+- std::move vs nrvo

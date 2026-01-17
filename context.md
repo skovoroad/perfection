@@ -21,6 +21,7 @@
 - `branch_prediction/` - Predictable vs unpredictable branch patterns comparison
 - `ilp_no_data_dependencies/` - ILP through loop unrolling with independent operations
 - `ilp_data_dependencies/` - ILP impact of data dependencies between loop iterations
+- `malloc/` - Memory allocator contention in multithreaded environments
 - `containers/vector/` - Multi-binary project comparing 5 vector implementations (std, boost variants, abseil)
 - `skeleton/` - Template for creating new projects
 
@@ -80,7 +81,10 @@ Demonstrates Instruction-Level Parallelism (ILP) through loop unrolling. Compare
 ### 8. ilp_data_dependencies
 Demonstrates impact of data dependencies on ILP. Compares independent iterations (each iteration uses current pair average) vs dependent iterations (uses previous pair average via prev_avg variable). The dependency chain in the dependent version prevents CPU from parallelizing iterations, showing ~2-3x performance difference.
 
-### 9. containers/vector
+### 9. malloc
+Demonstrates memory allocator contention in multithreaded environments. Compares allocation performance across 1, 2, 4, and 8 threads using `operator new/delete` with identical workload per thread (1,000 allocations). Tests two allocation sizes: 64 bytes (small objects, thread-local caches) and 4KB (medium objects, arena-level locks). Shows how modern allocators (glibc malloc) handle concurrent allocations through thread-local arenas. Deallocation excluded from measurements to focus on allocation contention. Hierarchical naming (`Size64B/Thread1`, `Size64B/Thread2`, etc.) groups results by allocation size, with different thread counts as table rows for easy comparison.
+
+### 10. containers/vector
 **Multi-binary benchmark project** comparing 5 vector container implementations:
 - `std::vector` - Standard library vector (heap-based)
 - `boost::container::vector` - Boost vector (heap-based, optimized growth)
@@ -96,7 +100,7 @@ Demonstrates impact of data dependencies on ILP. Compares independent iterations
 
 **Hierarchical naming**: Benchmarks use names like `Insert/Small_int/StdVector` for automatic grouping by operation/size/element-type.
 
-### 10. skeleton
+### 11. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
