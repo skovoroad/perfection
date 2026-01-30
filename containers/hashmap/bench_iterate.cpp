@@ -18,9 +18,11 @@ static void BM_Iterate_SmallMap(benchmark::State& state) {
     }
     
     for (auto _ : state) {
-        for (auto& [k, v] : map) {
-            benchmark::DoNotOptimize(v);
+        Value sum = 0;
+        for (const auto& [k, v] : map) {
+            sum += v;
         }
+        benchmark::DoNotOptimize(sum);
         benchmark::ClobberMemory();  // Prevent loop hoisting/caching optimizations
     }
 }
@@ -40,9 +42,11 @@ static void BM_Iterate_MediumMap(benchmark::State& state) {
     }
     
     for (auto _ : state) {
-        for (auto& [k, v] : map) {
-            benchmark::DoNotOptimize(v);
+        Value sum = 0;
+        for (const auto& [k, v] : map) {
+            sum += v;
         }
+        benchmark::DoNotOptimize(sum);
         benchmark::ClobberMemory();  // Prevent loop hoisting/caching optimizations
     }
 }
@@ -62,9 +66,11 @@ static void BM_Iterate_LargeMap(benchmark::State& state) {
     }
     
     for (auto _ : state) {
-        for (auto& [k, v] : map) {
-            benchmark::DoNotOptimize(v);
+        Value sum = 0;
+        for (const auto& [k, v] : map) {
+            sum += v;
         }
+        benchmark::DoNotOptimize(sum);
         benchmark::ClobberMemory();  // Prevent loop hoisting/caching optimizations
     }
 }

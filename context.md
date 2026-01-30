@@ -115,7 +115,22 @@ Demonstrates memory allocator contention in multithreaded environments. Compares
 
 **Operations**: insert, lookup, iterate, erase. **Sizes**: 16, 256, 4096 elements. **Types**: `Key = int`, `Value = int`.
 
-### 13. skeleton
+### 13. containers/hashset
+**Multi-binary benchmark project** comparing 2 hash set implementations:
+- `std::unordered_set` - Standard hash set (chained buckets)
+- `absl::flat_hash_set` - Swiss Table, SIMD-optimized
+
+**Operations**: insert, lookup, iterate, erase. **Sizes**: 16, 256, 4096 elements. **Types**: `Element = int`.
+
+### 14. containers/treeset
+**Multi-binary benchmark project** comparing 3 ordered set implementations:
+- `std::set` - Red-black tree
+- `boost::container::flat_set` - Sorted vector (binary search)
+- `absl::btree_set` - B-tree, cache-friendly
+
+**Operations**: insert, lookup, iterate, erase. **Sizes**: 16, 256, 4096 elements. **Types**: `Element = int`.
+
+### 15. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
