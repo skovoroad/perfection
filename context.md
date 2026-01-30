@@ -100,7 +100,22 @@ Demonstrates memory allocator contention in multithreaded environments. Compares
 
 **Hierarchical naming**: Benchmarks use names like `Insert/Small_int/StdVector` for automatic grouping by operation/size/element-type.
 
-### 11. skeleton
+### 11. containers/hashmap
+**Multi-binary benchmark project** comparing 2 hash table implementations:
+- `std::unordered_map` - Standard hash table (chained buckets)
+- `absl::flat_hash_map` - Swiss Table, SIMD-optimized
+
+**Operations**: insert, lookup, iterate, erase. **Sizes**: 16, 256, 4096 elements. **Types**: `Key = int`, `Value = int`.
+
+### 12. containers/treemap
+**Multi-binary benchmark project** comparing 3 ordered map implementations:
+- `std::map` - Red-black tree
+- `boost::container::flat_map` - Sorted vector (binary search)
+- `absl::btree_map` - B-tree, cache-friendly
+
+**Operations**: insert, lookup, iterate, erase. **Sizes**: 16, 256, 4096 elements. **Types**: `Key = int`, `Value = int`.
+
+### 13. skeleton
 Empty template project for creating new optimization comparison tests. Contains placeholder functions and benchmarks ready to be customized.
 
 ---
